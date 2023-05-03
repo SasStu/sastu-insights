@@ -4,7 +4,7 @@ date: '2021-02-04T21:38:20+01:00'
 author: 'Sascha Stumpler'
 excerpt: 'Modifying the Security Filtering of GPOs to prevent readable access to the BeyondTrust Privilege Management for Windows aka Avecto Defendpoint configuration'
 layout: post
-categories: ["Group Policy","Security"]
+categories: ["Group Policy","Security","EPM"]
 ---
 
 Hey folks, in the last 8 years I have been helpimg a lot of companies to deploy what is now known as BeyondTrust Privilege Management for Windows (PMfW) and was formerly known as Avecto Defendpoint or Privilege Guard. In this post I want to show you how to harden your Group Policy based configurations against unwanted access.
