@@ -13,7 +13,7 @@ Hey folks, in the last 8 years I have been helpimg a lot of companies to deploy 
 
 The PMfW Agent uses a human readable XML configuration file which in most cases is deployed via Group Policy. The locally cached configuration is protected against unelevated access with NTFS permissions, but this does not apply to the default configuration of the Group Policy. The XML configuration file stored in the policy directory in the SYSVOL-Share of the Domain is readable for every authenticated user. A clever user or an attacker could use the read-only access to find a loophole in the configuration to elevate processes he is not allowed to or to gain full admin access to the computer. It is very unlikely, due to the Anti-Tampering mechanisms implemented into the Agent, but not impossible.
 
-![Window]("{{ site.url }}/assets/images/2021/02/2021-02-04-14_55_20-Window.png")
+![Window]({{ site.url }}/assets/images/2021/02/2021-02-04-14_55_20-Window.png)
 
 As you can see in the picture above the access to the local policy cache in %ProgramData%\Avecto is prohibited <span style="color:purple">(1)</span>. But the user can load the XML configuration file from the GPO folder in the SYSVOL-Share and for example look up the application definitions of an Application Group <span style="color:green">(2)</span>.
 
