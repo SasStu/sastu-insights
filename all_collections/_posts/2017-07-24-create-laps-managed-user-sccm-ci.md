@@ -72,11 +72,9 @@ Specify a name for the setting and select as Setting type __Script__ and as Data
 
 Click on the upper __Edit Script...__ button in the *Discovery script* area. Then select __PowerShell__, and  copy paste the following script to the script area.
 
-[gist https://gist.github.com/SasStu/3eca866d420cf745ac7650e267d7240f /]
+{% gist 3eca866d420cf745ac7650e267d7240f %}
 
 Do the same with the lower  __Edit Script...__ button in the *Remediation Script* area with the following script.
-
-[gist https://gist.github.com/SasStu/211edec9e1d8d129da033587b061a13a /]
 
 {% gist 211edec9e1d8d129da033587b061a13a %}
 

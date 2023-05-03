@@ -106,7 +106,7 @@ I have written a short PowerShell function to import all baselines at once. You 
 
 Then change the __ExportPath__ to your folder path in the following script and execute it. You will need to import the [__Group Policy WMI filter cmdlet module__](https://gallery.technet.microsoft.com/scriptcenter/Group-Policy-WMI-filter-38a188f3) prior to successfully running the script.
 
-[gist https://gist.github.com/SasStu/103f5affd6bee2be72a1018f0f33da05 /]
+{% gist 103f5affd6bee2be72a1018f0f33da05 %}
 
 The script will create or update the GPOs and name them as you can see in the picture below. Additionally it will set the corresponding WMI-Filter if it includes the Build number (e.g. 1709)
 
