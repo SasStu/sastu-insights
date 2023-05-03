@@ -3,7 +3,7 @@ markdown: kramdown
 
 # for atom feed
 author:
-  name: Sascha Stumpler 
+  name: Sascha Stumpler
   email: sastu@sastu-insights.com
 
 plugins:
