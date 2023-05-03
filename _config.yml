@@ -1,10 +1,10 @@
-title: Jekyll Serial Programmer
+title: Sastu Insights
 markdown: kramdown
 
 # for atom feed
 author:
-  name: Sharad Raj Singh Maurya
-  email: dev_sharad@outlook.com
+  name: Sascha Stumpler 
+  email: sastu@sastu-insights.com
 
 plugins:
   - jemoji
