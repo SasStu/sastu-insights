@@ -78,6 +78,8 @@ Do the same with the lower  __Edit Script...__ button in the *Remediation Script
 
 [gist https://gist.github.com/SasStu/211edec9e1d8d129da033587b061a13a /]
 
+{% gist 211edec9e1d8d129da033587b061a13a %}
+
 Change to the *Compliance Rules* Tab and click on the __New...__ button.
 
 ![]({{ "/assets/images/2017/07/ci5.png" | relative_url}})
