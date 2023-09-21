@@ -79,6 +79,6 @@ Now you only have to assign the __application__ and a __LAPS configuration conta
 
 1. The device checks in with Intune and recognizes the app deployment
 2. The Intune Management Extension runs the detection script to check if the application is installed. It therefore checks if a user account is necessary and if it is already present.
-3. If the user is configured but does not exist the installation will be started which will create the account
-4. The detection is script runs again and discovers the user and therefore the application.
-5. If the AdministratorAccountName is changed the application [re-evaluation](https://learn.microsoft.com/en-us/mem/intune/apps/apps-win32-add#step-4-detection-rules) will detect the app as not installed and it will retry the installation and this will create a new local account.
+3. If the user is configured but does not exist the requirement rule (AdministratorAccountName is configured by Intune LAPS profile) is checked. The installation will be started if the requirements are met and will create the account.
+5. The detection is script runs again and discovers the user and therefore the application.
+6. If the AdministratorAccountName is changed the application [re-evaluation](https://learn.microsoft.com/en-us/mem/intune/apps/apps-win32-add#step-4-detection-rules) will detect the app as not installed and it will retry the installation and this will create a new local account.
