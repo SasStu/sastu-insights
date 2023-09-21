@@ -14,19 +14,24 @@ I was recently part of a discussion about creating a custom user to manage with 
 
 ## Problem
 
-Windows LAPS is a great and easy solution to manage a single local Windows account password but it lacks the ability to create the user if it not exists.
-Remediations in Microsoft Intune are the perfect tool to create a user account if it not exists because they are repeatedly checking for a wanted status on a device and repair/remediate it if its not present. I use it myself and published an Intune version of my script I used in [Configuration Manager with Configuration Baselines]( {{ "/posts/create-laps-managed-user-sccm-ci/" | relative_url}} ) to the [EndpointAnalyticsRemediationScripts GitHub repo](https://github.com/JayRHa/EndpointAnalyticsRemediationScripts/tree/main/Test-LAPSUser).
+Windows LAPS is a easy solution to manage a single local Windows account password. But it lacks the ability to create the user if it not exists.
+
+Remediations in Microsoft Intune are the perfect tool to create a user account if it not exists because they are repeatedly checking for a wanted status on a device and repair/remediate it if it is not present. I use it myself and published an Intune version of my script I used in [Configuration Manager with Configuration Baselines]( {{ "/posts/create-laps-managed-user-sccm-ci/" | relative_url}} ) to the [EndpointAnalyticsRemediationScripts GitHub repo](https://github.com/JayRHa/EndpointAnalyticsRemediationScripts/tree/main/Test-LAPSUser).
+
 But the use of Remediations is limited to [Enterprise customers](https://learn.microsoft.com/en-us/mem/intune/fundamentals/remediations#licensing) and how can non Enterprise customers handle this?
 
 ## Solution
 
 The solution I came up with was packaging the [new-LAPSUser.ps1](https://github.com/JayRHa/EndpointAnalyticsRemediationScripts/blob/main/Test-LAPSUser/new-LAPSUser.ps1) as a Win32App and use the [detect-LAPSUser.ps1](https://github.com/JayRHa/EndpointAnalyticsRemediationScripts/blob/main/Test-LAPSUser/detect-LAPSUser.ps1) as detection method for it.
+
 Sounds simple? Yes but there are some caveats like running the script in the 32-bit PowerShell Host.
 
 ### What the scripts are doing
 
 Both scripts are checking if an [AdministratorAccountName](https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-management-policy-settings#administratoraccountname) is set via the [CSP](https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-management-policy-settings#supported-policy-roots) and if a [Backup Directory](https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-management-policy-settings#supported-policy-settings-by-backupdirectory) is configured and if Windows LAPS is present on the system.
+
 The [detect-LAPSUser.ps1](https://github.com/JayRHa/EndpointAnalyticsRemediationScripts/blob/main/Test-LAPSUser/detect-LAPSUser.ps1) also checks if a local account with the configured AdministratorAccountName is present.
+
 The [new-LAPSUser.ps1](https://github.com/JayRHa/EndpointAnalyticsRemediationScripts/blob/main/Test-LAPSUser/new-LAPSUser.ps1) creates a user account with the AdministratorAccountName with a random password.
 
 ### Package the script
