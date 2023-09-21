@@ -9,5 +9,14 @@
     "**/README.md",
     "**/*.txt",
     "**/*.md"
+  ],
+  "files.defaultLanguage": "markdown",
+  "spellright.language": [
+    "en"
+  ],
+  "spellright.documentTypes": [
+    "markdown",
+    "latex",
+    "plaintext"
   ]
 }
