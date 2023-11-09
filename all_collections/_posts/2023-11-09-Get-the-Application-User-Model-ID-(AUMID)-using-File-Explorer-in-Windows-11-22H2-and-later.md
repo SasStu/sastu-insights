@@ -11,6 +11,7 @@ tags:
 ## Problem
 
 The Application User Model ID (AUMID) of an application is needed in some cases when you are configuring Windows, e.g. for Kiosk configurations or the customization of the start menu and taskbar. A [Microsoft Learn article](https://learn.microsoft.com/en-us/windows/configuration/find-the-application-user-model-id-of-an-installed-app#to-find-the-aumid-by-using-file-explorer) describes different ways of getting the AUMIDs for the installed applications.
+
 Windows 11 22H2 introduced a new File Explorer in which it is no longer possible to extend the view as described by Microsoft by pressing the __Alt-Key__ and it is therefore no longer possible to show the AUMIDs as described.
 
 ## Solution
