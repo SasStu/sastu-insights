@@ -1,6 +1,6 @@
 ---
 title: 'Get the Application User Model ID (AUMID) using File Explorer in Windows 11 22H2 and later'
-date: '2023 11-09T10:22:54+01:00'
+date: '2023-11-09T10:22:54+01:00'
 author: 'Sascha Stumpler'
 layout: post
 categories:
