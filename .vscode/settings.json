@@ -18,5 +18,11 @@
     "markdown",
     "latex",
     "plaintext"
+  ],
+  "terminal.integrated.env.windows": {
+    "PATH": "C:\\Users\\StumplerSascha\\.azurelogicapps\\dependencies\\DotNetSDK;${env:PATH}"
+  },
+  "omnisharp.dotNetCliPaths": [
+    "C:\\Users\\StumplerSascha\\.azurelogicapps\\dependencies\\DotNetSDK"
   ]
 }
