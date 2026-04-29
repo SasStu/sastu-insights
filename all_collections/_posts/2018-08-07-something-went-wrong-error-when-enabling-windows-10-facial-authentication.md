@@ -24,7 +24,7 @@ When I was at a customer's site lately and tried to enable the Windows Hello fac
 
 When I checked the Windows Event Log I could find a DistributedCOM error with the EventID 10016 which stated that the application did not have the *local activation permission for the COM application*.
 
-![Windows eventlog error DCOM]({{ "/assets/images/2018/08/2018-07-23-18_39_12-Clipboard.png")
+![Windows eventlog error DCOM]({{ "/assets/images/2018/08/2018-07-23-18_39_12-Clipboard.png" | relative_url}})
 
 After that I looked up the *APPID* from the event in the *Component Services* and found out that it was the *RuntimeBroker* which controls the execution of the AppX(Universial)-Apps. Thinking about that I remembered that we had limited the access to the camera to certain AppX-Apps via Group Policy.
 

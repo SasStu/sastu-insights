@@ -19,5 +19,13 @@
       {% include footer.html %}
     </main>
     {% include category-modal.html%}
+    <script>
+      document.querySelectorAll('.content a[href^="http"]').forEach(function(a) {
+        if (a.hostname !== location.hostname) {
+          a.setAttribute('target', '_blank');
+          a.setAttribute('rel', 'noopener noreferrer');
+        }
+      });
+    </script>
   </body>
 </html>
