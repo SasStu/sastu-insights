@@ -14,6 +14,9 @@
             {% endfor %}
           </div>
         </div>
+        {% if page.image %}
+        <img class="article-title-image" src="{{page.image | relative_url}}" alt="{{page.title}}">
+        {% endif %}
         <div class="content">{{content}}</div>
       </section>
       {% include footer.html %}

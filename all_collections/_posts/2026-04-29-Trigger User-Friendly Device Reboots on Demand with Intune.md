@@ -9,9 +9,8 @@ tags:
   - Intune
   - Win32 App
   - PowerShell
+image: /assets/images/2026/04/intune-restart-notification-detail.png
 ---
-
-![Assignment deadline dialogue]({{ "/assets/images/2026/04/intune-restart-notification-detail.png" | relative_url}})
 
 I am currently supporting customers with the deployment of the Secure Boot certificate updates using Intune remediations, which requires rebooting some devices. Since a forced reboot was not an option while users were actively working on these machines, I looked for a more user-friendly approach.
 I ended up leveraging the graceful reboot capability of the Intune Win32 app framework. This article describes how to implement this approach using a single Intune Win32 app combined with a PowerShell helper script. The solution automates reboots in a controlled and user-aware manner: reboots occur only when required, are triggered through the standard Intune detection and remediation cycle, and leave the device in a clean, compliant state immediately afterward.
