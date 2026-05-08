@@ -9,13 +9,12 @@ categories:
 tags:
   - "Autopilot"
   - "PowerShell"
+image: /assets/images/2026/04/HVVideo.gif
 ---
 
 # Creating Hyper-V VMs for Autopilot Testing with HyperV.VMFactory
 
 If you're working with Windows Autopilot in a lab environment, you know the drill: spin up a VM, configure it, enroll it, wipe it, repeat. That cycle gets old fast - especially when every new VM means another round of manual settings. I built a PowerShell script a few years back and added features when needed. With some help from my friend Claude we refactored it to a module and add some great new capabilities, I'm happy to share it as **HyperV.VMFactory**.
-
-![Video]({{ "/assets/images/2026/04/HVVideo.gif" | relative_url}})
 
 ## The Problem: VM Sprawl in Hyper-V Labs
 
