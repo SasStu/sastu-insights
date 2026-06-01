@@ -136,6 +136,8 @@ Navigate to **Endpoint security > Attack surface reduction > Reports** and open 
 
 Each row is an audit event recording a device access attempt. The report shows the media name, class, the device the event occurred on, and the user. This is the primary tool for identifying which devices users are trying to use.
 
+> **Note:** The Device Control report can have a delay of up to 6 hours before events appear. If you need to investigate a recent block, check back later or use Advanced Hunting for more immediate results. See [Reporting delays](https://learn.microsoft.com/defender-endpoint/device-control-report#reporting-delays) in the Microsoft documentation.
+
 Click on any event to open the detailed event view:
 
 ![Event details with serial number highlighted](/assets/images/2026/05/intune-usb-device-control-event-details.png)
@@ -152,6 +154,8 @@ In this example, the blocked device is a SanDisk Sandisk Ultra with serial numbe
 ### Advanced Hunting as an Alternative Source
 
 The Device Control report works well for browsing individual events, but when you need to extract serial numbers for many devices at once, or want to build a repeatable query you can run on demand, **Advanced Hunting** in Microsoft Defender XDR is the better tool.
+
+> **Note:** Advanced Hunting is not available in Microsoft Defender for Business. If your environment uses Defender for Business, use the Device Control report as your only event source.
 
 Device control events are stored in the `DeviceEvents` table under the `RemovableStoragePolicyTriggered` action type. The following query is the official example from the Microsoft documentation and returns all disk and file system level enforcement events with the full set of hardware attributes:
 
