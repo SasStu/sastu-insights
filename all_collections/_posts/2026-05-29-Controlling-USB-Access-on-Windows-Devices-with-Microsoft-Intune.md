@@ -255,6 +255,30 @@ Start with `SerialNumberId` for individual exceptions. Expand to VID_PID or VID 
 
 ---
 
+## Troubleshooting
+
+If a policy does not appear to be taking effect on an endpoint, two PowerShell commands run as administrator help narrow down whether the issue is with policy delivery or policy application.
+
+To check when the device control policy was last received and applied by Defender:
+
+```powershell
+Get-MpComputerStatus | Select-Object DeviceControlPoliciesLastUpdated
+```
+
+This returns the timestamp of the last successful policy update. If the value is stale or absent, the device has not received or applied the policy -- check Defender health, onboarding status, and Intune sync.
+
+To inspect the locally cached policy package that Defender is currently enforcing:
+
+```powershell
+Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows Defender\Device Control" `
+    -Name "LastKnownValidPolicyPackage" -ErrorAction SilentlyContinue |
+    Select-Object -ExpandProperty LastKnownValidPolicyPackage
+```
+
+This returns the XML content of the policy as Defender last evaluated it. If the value is empty, Defender has not yet received a valid policy. If it is present, you can inspect the XML to confirm that your rules and device groups are included as expected -- useful for verifying that a reusable settings group change has actually propagated.
+
+---
+
 ## What's Next
 
 With a block-all baseline in place and a tested allow exception workflow, you have the foundation for a sustainable USB device control program:
