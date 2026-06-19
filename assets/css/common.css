@@ -179,3 +179,37 @@ pre:hover .copy-code-button {
     background-color: var(--gray-3);
   }
 }
+
+.powered-by {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.powered-by img {
+  height: 22px;
+  width: auto;
+  vertical-align: middle;
+  /* Default (dark mode): the logo's dark text needs a light backing to stay visible */
+  background-color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+[data-theme="dark"] .powered-by img {
+  background-color: #fff;
+  padding: 4px 8px;
+}
+
+[data-theme="light"] .powered-by img {
+  background-color: transparent;
+  padding: 0;
+}
+
+@media (prefers-color-scheme: light) {
+  .powered-by img {
+    background-color: transparent;
+    padding: 0;
+  }
+}
