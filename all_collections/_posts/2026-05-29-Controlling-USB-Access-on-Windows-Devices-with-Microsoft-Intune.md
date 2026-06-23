@@ -216,10 +216,10 @@ For the **Included Devices** of the ALLOW rule, reference the allowed device reu
 
 The policy now has two rules:
 
-| Rule | Included Devices | Excluded Devices | Purpose |
-| --- | --- | --- | --- |
-| BLOCK | All removable media group | Allowed device group | Deny and audit all other removable media |
-| ALLOW [device] | Allowed device group | (none) | Grant full access to the approved device |
+| Rule           | Included Devices          | Excluded Devices     | Purpose                                  |
+| -------------- | ------------------------- | -------------------- | ---------------------------------------- |
+| BLOCK          | All removable media group | Allowed device group | Deny and audit all other removable media |
+| ALLOW [device] | Allowed device group      | (none)               | Grant full access to the approved device |
 
 Configure the access entries for the ALLOW rule. Add two entries:
 
@@ -243,17 +243,39 @@ The Audit Allowed entry ensures that even permitted device usage appears in the 
 
 ---
 
+## Allowing Printing on Any Printer
+
+Device Control is not limited to removable storage. The same policy framework governs **printer devices**, which lets you control whether users can print to USB-connected, network, or corporate printers. A common requirement is to keep removable storage locked down while still permitting printing -- for example, allowing users to print to any printer rather than maintaining an explicit allow list per device.
+
+The workflow mirrors the removable storage exception: create a reusable settings group that targets the printer device class, then reference it from an ALLOW rule with a `Print` access mask.
+
+Start by creating a new reusable settings group named `ReUsable-DevControl-AllPrinterDevices-ALLOWED-[PI]`.
+
+![Printer reusable settings group name](/assets/images/2026/05/intune-usb-device-control-printer-group-name.png)
+
+On the **Configuration settings** tab, add an entry with the **Printer device** object type. Set **PrimaryId** to `Printer Devices` and give the entry a descriptive name such as `All Printers`. Leave the other identifier fields empty so the rule matches the entire printer class rather than a specific model. To allow only a specific printer, populate `VID_PID` or `PrinterConnectionId` instead.
+
+![Configure printer instance with PrimaryId set to Printer Devices](/assets/images/2026/05/intune-usb-device-control-printer-instance.png)
+
+Return to the Device Control policy and add a rule named `ALLOW Print`. For **Included Devices**, reference the printer reusable settings group just created. Configure an access entry of type `Allow` and select **Print** in the access mask.
+
+![ALLOW Print rule with Print access mask](/assets/images/2026/05/intune-usb-device-control-printer-allow-rule.png)
+
+With this rule in place alongside the removable storage rules, printing remains available across the fleet while USB mass storage stays blocked by default. Because printer control shares the same Default Deny enforcement model, remember that printing must be explicitly allowed once Device Control is enabled -- otherwise the default deny posture will block it.
+
+---
+
 ## Choosing the Right Device Identifier
 
 The identifier you use in the reusable settings group determines how broad or narrow the allow exception is:
 
-| Identifier | Scope | When to use |
-| --- | --- | --- |
-| `SerialNumberId` | One specific physical device | Allowing a named individual's device |
-| `VID_PID` | All devices of a given model from a vendor | Approving a standard corporate USB model |
-| `VID` | All devices from a vendor | Allowing an entire vendor's product range |
-| `PrimaryId` | An entire device class | Allowing all removable media (used in the block group here) |
-| `DeviceId` | Full hardware ID string | Precise match including revision |
+| Identifier       | Scope                                      | When to use                                                 |
+| ---------------- | ------------------------------------------ | ----------------------------------------------------------- |
+| `SerialNumberId` | One specific physical device               | Allowing a named individual's device                        |
+| `VID_PID`        | All devices of a given model from a vendor | Approving a standard corporate USB model                    |
+| `VID`            | All devices from a vendor                  | Allowing an entire vendor's product range                   |
+| `PrimaryId`      | An entire device class                     | Allowing all removable media (used in the block group here) |
+| `DeviceId`       | Full hardware ID string                    | Precise match including revision                            |
 
 Start with `SerialNumberId` for individual exceptions. Expand to VID_PID or VID only when managing individual serials becomes operationally impractical -- and document the rationale for the broader scope, since widening the scope increases risk.
 
