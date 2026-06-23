@@ -19,6 +19,24 @@ Microsoft Intune provides a native mechanism to address this through the **Devic
 
 This article walks through the full implementation from start to finish: first establishing a block-all baseline to verify everything is working as expected, then using the Device Control report to identify devices, and finally adding allow exceptions for specific approved hardware.
 
+## Table of Contents
+
+- [Prerequisite: Defender for Endpoint Onboarding](#prerequisite-defender-for-endpoint-onboarding)
+- [How Device Control Works in Intune](#how-device-control-works-in-intune)
+- [Step 1: Create a Reusable Settings Group for All Removable Media](#step-1-create-a-reusable-settings-group-for-all-removable-media)
+- [Step 2: Create the Device Control Policy](#step-2-create-the-device-control-policy)
+- [Step 3: Configure the Access Entries for the BLOCK Rule](#step-3-configure-the-access-entries-for-the-block-rule)
+- [Step 4: Verify the Block is Working](#step-4-verify-the-block-is-working)
+- [Step 5: Use the Device Control Report to Identify Devices](#step-5-use-the-device-control-report-to-identify-devices)
+  - [Advanced Hunting as an Alternative Source](#advanced-hunting-as-an-alternative-source)
+- [Step 6: Create a Reusable Settings Group for the Allowed Device](#step-6-create-a-reusable-settings-group-for-the-allowed-device)
+- [Step 7: Add the Allow Rule to the Policy](#step-7-add-the-allow-rule-to-the-policy)
+- [Allowing Printing on Any Printer](#allowing-printing-on-any-printer)
+- [Choosing the Right Device Identifier](#choosing-the-right-device-identifier)
+- [Troubleshooting](#troubleshooting)
+- [What's Next](#whats-next)
+- [Microsoft Documentation](#microsoft-documentation)
+
 ---
 
 ## Prerequisite: Defender for Endpoint Onboarding
