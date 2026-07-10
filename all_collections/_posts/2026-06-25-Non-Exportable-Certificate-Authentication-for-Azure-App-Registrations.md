@@ -495,4 +495,4 @@ else {
 
 ---
 
-The complete script is included above - copy it into a `.ps1`, run it elevated, and upload the resulting `.cer` to your App Registration.
+The complete script is included above - copy it into a `.ps1`, run it elevated, and upload the resulting `.cer` to your App Registration. It is also available in my [Intune-Misc GitHub repo](https://github.com/SasStu/Intune-Misc).
