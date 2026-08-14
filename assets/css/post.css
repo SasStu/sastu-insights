@@ -222,6 +222,27 @@ main {
   }
 }
 
+/* mermaid */
+
+.content .mermaid {
+  margin: 1rem 0 1.75rem;
+  padding: 1rem;
+  text-align: center;
+  overflow-x: auto;
+  background: var(--gray-3);
+}
+
+.content .mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Unrendered source, e.g. if the renderer fails to load. */
+.content .mermaid:not([data-processed]) {
+  white-space: pre;
+  text-align: left;
+}
+
 /* lbox */
 
 .content img {
