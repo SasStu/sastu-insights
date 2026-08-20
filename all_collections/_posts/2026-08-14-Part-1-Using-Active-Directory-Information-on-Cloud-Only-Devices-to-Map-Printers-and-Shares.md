@@ -17,7 +17,7 @@ image: /assets/images/2026/08/ad-mappings-cloud-only-header.png
 
 > Part 1 of 3 in the *Drive and printer mappings for Entra-joined devices* series.
 > **Part 1 (this article)** - reading AD group data from a cloud-only device and acting on it.
-> **Part 2** - running the job only when on-prem AD is actually reachable.
+> **[Part 2](/posts/Part-2-Running-a-Scheduled-Task-Only-When-Active-Directory-Is-Actually-Reachable/)** - running the job only when on-prem AD is actually reachable.
 > **Part 3** - packaging and deploying the whole thing with PSAppDeployToolkit and Intune.
 
 There is no shortage of drive- and printer-mapping scripts for cloud-only devices. I went looking before
@@ -146,7 +146,7 @@ keeps this solution alive as you move to passwordless.
 
 Beyond that: **hybrid identity** (users originate in on-prem AD and sync up via Entra Connect or Cloud
 Sync - a cloud-only *user* has no on-prem account to find), and **line of sight to a domain controller**
-at the moment the script runs, which is Part 2's entire subject.
+at the moment the script runs, which is [Part 2](/posts/Part-2-Running-a-Scheduled-Task-Only-When-Active-Directory-Is-Actually-Reachable/)'s entire subject.
 
 ### Verify it, do not assume it
 
@@ -267,7 +267,7 @@ attribute, and one of the two printers does not exist. Each is logged as a warni
 the run still finishes with a drive and a printer on screen. A bad value in one group's attribute must
 never cost a user their other mappings.*
 
-In production it runs from a scheduled task as the Users group, at least privilege, which is Part 2.
+In production it runs from a scheduled task as the Users group, at least privilege, which is [Part 2](/posts/Part-2-Running-a-Scheduled-Task-Only-When-Active-Directory-Is-Actually-Reachable/).
 Packaging and Intune deployment are Part 3.
 
 ## Getting the Script
@@ -302,6 +302,6 @@ the first German-language device.
 
 **It will fail at logon, almost every time.** The user signs in at home, the VPN is not up, no DC is
 reachable - and the one moment you are guaranteed to execute is the one moment AD is guaranteed absent.
-Solving that is Part 2: making a scheduled task run *when on-prem AD actually becomes reachable*,
+Solving that is [Part 2](/posts/Part-2-Running-a-Scheduled-Task-Only-When-Active-Directory-Is-Actually-Reachable/): making a scheduled task run *when on-prem AD actually becomes reachable*,
 using the Domain firewall profile as the signal and the Intune NetworkListManager CSP to earn that profile
 on a device with no domain membership to earn it with.
