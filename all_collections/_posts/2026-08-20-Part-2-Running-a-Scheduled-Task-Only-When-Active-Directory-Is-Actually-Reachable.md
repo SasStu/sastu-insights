@@ -150,6 +150,17 @@ this article, take that sentence.
 *The entire policy, in two settings. The endpoint list is the part that carries the security property -
 the network name is only what your users and your support desk will see.*
 
+If you would rather not click through the catalog, the finished profile is in the repository as
+[Intune/CProf-Win-D-SetCat-FirewallDomainProfile-[ToEdit].json](https://github.com/SasStu/MapPrinterAndSharesCloudOnlyFromAD/blob/main/Intune/CProf-Win-D-SetCat-FirewallDomainProfile-%5BToEdit%5D.json)
+and the admin center imports it directly: *Devices* → *Manage devices* → *Configuration* → **Create** →
+**Import policy**, select the file, give the new policy a name, and save. That gets you both settings with
+the correct `settingDefinitionId` values without hunting through the catalog.
+
+The `[ToEdit]` in the name is the important part. Both values in the export are placeholders: it ships with
+`https://internalwebsite/` as the endpoint and `Dummy` as the network name. Replace them with your own
+before the policy goes anywhere near a device group. The export carries no assignments either, so step 6
+is still yours to do after the import.
+
 ### Step 2 - Verify the Domain profile
 
 On a target device, connected to the corporate network:
@@ -278,7 +289,15 @@ the one to investigate - each step above verifies exactly one of them.
 
 ## The Complete Task Definition
 
-The task XML, the script, and the Pester test suite are on [SasStu/MapPrinterAndSharesCloudOnlyFromAD](https://github.com/SasStu/MapPrinterAndSharesCloudOnlyFromAD).
+The task XML, the script, the Pester test suite, and the exported Intune profile from Step 1 are on
+[SasStu/MapPrinterAndSharesCloudOnlyFromAD](https://github.com/SasStu/MapPrinterAndSharesCloudOnlyFromAD):
+
+| Path | What it is |
+| --- | --- |
+| [`Install/SMBShares.xml`](https://github.com/SasStu/MapPrinterAndSharesCloudOnlyFromAD/blob/main/Install/SMBShares.xml) | The complete scheduled task definition, both triggers included. |
+| [`Intune/`](https://github.com/SasStu/MapPrinterAndSharesCloudOnlyFromAD/tree/main/Intune) | The Network List Manager profile from Step 1, ready for **Create** → **Import policy**. Replace the placeholder values. |
+| [`Script/`](https://github.com/SasStu/MapPrinterAndSharesCloudOnlyFromAD/tree/main/Script) | `MapDrivesAndPrinter.ps1`, the script from Part 1. |
+| [`Tests/`](https://github.com/SasStu/MapPrinterAndSharesCloudOnlyFromAD/tree/main/Tests) | The Pester suite. |
 
 ## Things to Keep in Mind
 

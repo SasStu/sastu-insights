@@ -169,6 +169,12 @@ main {
   border: 1px solid var(--gray-3);
   padding: 0.2rem;
 }
+/* long unbreakable tokens (paths, code) must wrap instead of widening the table */
+.content table td,
+.content table th {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
 .content img {
   max-width: 100%;
   margin: 1rem 0;
