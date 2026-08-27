@@ -18,7 +18,7 @@ image: /assets/images/2026/08/ad-mappings-cloud-only-header.png
 > Part 1 of 3 in the *Drive and printer mappings for Entra-joined devices* series.
 > **Part 1 (this article)** - reading AD group data from a cloud-only device and acting on it.
 > **[Part 2](/posts/Part-2-Running-a-Scheduled-Task-Only-When-Active-Directory-Is-Actually-Reachable/)** - running the job only when on-prem AD is actually reachable.
-> **Part 3** - packaging and deploying the whole thing with PSAppDeployToolkit and Intune.
+> **[Part 3](/posts/Part-3-Packaging-a-Drive-and-Printer-Mapping-Script-with-PSAppDeployToolkit-and-Deploying-It-with-Intune/)** - packaging and deploying the whole thing with PSAppDeployToolkit and Intune.
 
 There is no shortage of drive- and printer-mapping scripts for cloud-only devices. I went looking before
 writing any of this, and found plenty of them: mapping tables hardcoded in the script, JSON or CSV
@@ -268,7 +268,7 @@ the run still finishes with a drive and a printer on screen. A bad value in one 
 never cost a user their other mappings.*
 
 In production it runs from a scheduled task as the Users group, at least privilege, which is [Part 2](/posts/Part-2-Running-a-Scheduled-Task-Only-When-Active-Directory-Is-Actually-Reachable/).
-Packaging and Intune deployment are Part 3.
+Packaging and Intune deployment are [Part 3](/posts/Part-3-Packaging-a-Drive-and-Printer-Mapping-Script-with-PSAppDeployToolkit-and-Deploying-It-with-Intune/).
 
 ## Getting the Script
 

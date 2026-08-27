@@ -17,9 +17,9 @@ image: /assets/images/2026/08/ad-mappings-part2-header.png
 ---
 
 > Part 2 of 3 in the *Drive and printer mappings for Entra-joined devices* series.
-> **Part 1** - reading AD group data from a cloud-only device and acting on it.
+> **[Part 1](/posts/Part-1-Using-Active-Directory-Information-on-Cloud-Only-Devices-to-Map-Printers-and-Shares/)** - reading AD group data from a cloud-only device and acting on it.
 > **Part 2 (this article)** - running the job only when on-prem AD is actually reachable.
-> **Part 3** - packaging and deploying the whole thing with PSAppDeployToolkit and Intune.
+> **[Part 3](/posts/Part-3-Packaging-a-Drive-and-Printer-Mapping-Script-with-PSAppDeployToolkit-and-Deploying-It-with-Intune/)** - packaging and deploying the whole thing with PSAppDeployToolkit and Intune.
 
 [Part 1](/posts/Part-1-Using-Active-Directory-Information-on-Cloud-Only-Devices-to-Map-Printers-and-Shares/) ended with a working script: given a cloud-only device whose signed-in user can authenticate
 to on-prem AD, it discovers their group memberships and creates the matching drive and printer mappings.
@@ -256,7 +256,7 @@ The principal, the action, and the settings that matter:
 | `StopIfGoingOnBatteries` | `false` | Same reason. |
 | `MultipleInstancesPolicy` | `IgnoreNew` | Prevents pile-ups on rapid network flapping. See the note below about stuck instances. |
 | `ExecutionTimeLimit` | `PT1H` | Backstop. |
-| `AllowStartOnDemand` | `true` | Lets a user or your support desk trigger a re-map manually - Part 3 turns this into a Start Menu shortcut. |
+| `AllowStartOnDemand` | `true` | Lets a user or your support desk trigger a re-map manually - [Part 3](/posts/Part-3-Packaging-a-Drive-and-Printer-Mapping-Script-with-PSAppDeployToolkit-and-Deploying-It-with-Intune/) turns this into a Start Menu shortcut. |
 | `Hidden` | `true` | Keeps it out of the default Task Scheduler view. |
 
 The action:
@@ -337,6 +337,6 @@ AD already reachable, and for that machine logon is exactly right. It is one tri
 mechanism.
 
 **You still cannot deploy any of this.** You have a script that does the right thing and a trigger that
-fires at the right moment, but no way to get either onto a few thousand machines. Part 3 covers
+fires at the right moment, but no way to get either onto a few thousand machines. [Part 3](/posts/Part-3-Packaging-a-Drive-and-Printer-Mapping-Script-with-PSAppDeployToolkit-and-Deploying-It-with-Intune/) covers
 packaging it with PSAppDeployToolkit v4, deploying through Intune, giving users a Start Menu shortcut to
 re-run on demand, and where to look when one device misbehaves.

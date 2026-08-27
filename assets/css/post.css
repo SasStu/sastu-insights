@@ -175,6 +175,14 @@ main {
   overflow-wrap: anywhere;
   word-break: break-word;
 }
+/* inline code must wrap inside tables - the white-space: pre below would
+   otherwise hold a column at the full token width and collapse its neighbours.
+   break-word, not anywhere: a setting name stays on one line unless it truly
+   cannot fit, so identifiers are not split mid-word. */
+.content table code {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
 .content img {
   max-width: 100%;
   margin: 1rem 0;
