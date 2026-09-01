@@ -70,8 +70,7 @@
   backdrop-filter: blur(3px);
 }
 
-.sh-header .sh-path,
-.sh-card .sh-path {
+.sh-header .sh-path {
   font-size: 0.875rem;
   color: #6B6D71;
   white-space: nowrap;
@@ -109,12 +108,17 @@
   padding: 2.375rem 2.75rem;
 }
 
+/* Slugs here are the full post title, so the real path runs 60-110 characters.
+   Clip it to a single line rather than let it wrap into a grey paragraph. */
 .sh-header .sh-prompt,
 .sh-card .sh-prompt {
   margin: 0;
   font-size: 1.0625rem;
   color: var(--sh-dim);
-  overflow-wrap: anywhere;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sh-header .sh-ps,
@@ -204,8 +208,13 @@
   border-bottom: 1px solid var(--sh-line);
 }
 
-.sh-card .sh-path,
+.sh-card .sh-date,
 .sh-card .sh-cat { font-size: 0.75rem; }
+
+.sh-card .sh-date {
+  color: #6B6D71;
+  font-variant-numeric: tabular-nums;
+}
 
 .sh-card .sh-card-body {
   flex: 1;
@@ -224,7 +233,7 @@
   line-height: 1.15;
   letter-spacing: -0.015em;
   color: var(--sh-fg);
-  max-width: 24ch;
+  max-width: 34ch;
 }
 
 /* ---------- narrow screens ---------- */
@@ -238,7 +247,6 @@
   .sh-header .sh-prompt,
   .sh-header .sh-cont { font-size: 0.9375rem; }
   .sh-header .sh-title { max-width: none; }
-  .sh-card .sh-path { display: none; }
 }
 
 /* ---------- card grid ---------- */
@@ -246,8 +254,6 @@
    theme's own list styles stay untouched. */
 
 .sh-card-grid {
-  /* 285px, not 320px: the theme caps main at 650px, and 320px tracks fall back
-     to a single column there. 285px gives the intended two-up thumbnail grid. */
-  grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+  grid-template-columns: 1fr;
   gap: 1rem;
 }

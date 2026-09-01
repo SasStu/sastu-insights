@@ -1,13 +1,16 @@
 {% comment %}
   Homepage / post-list thumbnail version of the console header.
   Usage inside a posts loop:  {% include sastu-header-card.html post=post %}
+  Honours the same header_title / header_category / header_part overrides as the hero.
 {% endcomment %}
 
 {%- assign p = include.post -%}
 {%- assign raw = p.title -%}
+{%- assign part = '' -%}
 {%- if raw contains ':' -%}
   {%- assign pre = raw | split: ':' | first -%}
   {%- if pre contains 'Part' or pre contains 'Teil' -%}
+    {%- assign part = pre | strip -%}
     {%- assign raw = raw | remove_first: pre | remove_first: ':' | strip -%}
   {%- endif -%}
 {%- endif -%}
@@ -36,13 +39,16 @@
   {%- when 'Autopilot' -%}{% assign hue = 130 %}
 {%- endcase -%}
 
+{%- assign sh_title = p.header_title | default: display -%}
+{%- assign sh_part  = p.header_part  | default: part -%}
+
 <a class="sh-card" href="{{ p.url | relative_url }}" style="--sh-hue: {{ hue }};">
   <span class="sh-chrome">
-    <span class="sh-path">{{ p.url }}</span>
-    <span class="sh-cat"><i class="sh-dot" aria-hidden="true"></i>{{ cat }}</span>
+    <time class="sh-date" datetime="{{ p.date | date_to_xmlschema }}">{{ p.date | date: '%Y-%m-%d' }}</time>
+    <span class="sh-cat"><i class="sh-dot" aria-hidden="true"></i>{{ cat }}{% if sh_part != '' %} · {{ sh_part }}{% endif %}</span>
   </span>
   <span class="sh-card-body">
     <span class="sh-prompt"><span class="sh-ps">PS&nbsp;&gt;</span>~{{ p.url | remove: '.html' }}</span>
-    <span class="sh-card-title">{{ display }}<span class="sh-caret" aria-hidden="true">█</span></span>
+    <span class="sh-card-title">{{ sh_title }}<span class="sh-caret" aria-hidden="true">█</span></span>
   </span>
 </a>
