@@ -176,7 +176,8 @@
 /* ---------- caret ---------- */
 
 .sh-header .sh-caret,
-.sh-card .sh-caret {
+.sh-card .sh-caret,
+.sh-masthead .sh-caret {
   color: var(--sh-amber);
   margin-left: 0.15em;
   animation: sh-blink 1.24s steps(1, end) infinite;
@@ -186,7 +187,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .sh-header .sh-caret,
-  .sh-card .sh-caret { animation: none; }
+  .sh-card .sh-caret,
+  .sh-masthead .sh-caret { animation: none; }
 }
 
 /* ---------- list card ---------- */
@@ -194,6 +196,7 @@
 .sh-card {
   display: flex;
   flex-direction: column;
+  min-width: 0;
   min-height: 200px;
   text-decoration: none;
   border: 1px solid var(--sh-line);
@@ -242,6 +245,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 0;
   justify-content: center;
   gap: 0.625rem;
   padding: 1.25rem 1.375rem;
@@ -279,6 +283,128 @@
    theme's own list styles stay untouched. */
 
 .sh-card-grid {
-  grid-template-columns: 1fr;
+  /* minmax(0, 1fr), not 1fr: the prompt line is nowrap, so its min-content
+     width is the whole path. A plain 1fr track plus a grid item's default
+     min-width: auto lets that push the card past the column and give the page
+     a horizontal scrollbar. The min-width: 0 chain below carries it down. */
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
+}
+
+/* ---------- masthead + bio ---------- */
+/* Unlike the panels, these sit on the page background and have to follow the
+   theme into light mode, so they take their text colour from the theme's own
+   variables. Only the amber is ours, and it darkens in light mode - #F0A03C
+   on a #f5f5f5 ground is about 2.4:1, nowhere near legible. */
+
+.sh-masthead,
+.sh-bio {
+  --sh-amber-ink: #F0A03C;
+  --sh-hash-ink: #4E5157;
+  --sh-rule: var(--gray-3);
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@media (prefers-color-scheme: light) {
+  .sh-masthead,
+  .sh-bio {
+    --sh-amber-ink: #A8651A;
+    --sh-hash-ink: #9DA0A5;
+  }
+}
+
+[data-theme="light"] .sh-masthead,
+[data-theme="light"] .sh-bio {
+  --sh-amber-ink: #A8651A;
+  --sh-hash-ink: #9DA0A5;
+}
+
+[data-theme="dark"] .sh-masthead,
+[data-theme="dark"] .sh-bio {
+  --sh-amber-ink: #F0A03C;
+  --sh-hash-ink: #4E5157;
+}
+
+.sh-masthead .sh-masthead-id {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.sh-masthead .sh-mast-prompt {
+  font-size: 0.9375rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--white-2);
+}
+
+.sh-masthead .sh-mast-ps {
+  color: var(--sh-amber-ink);
+  margin-right: 0.5rem;
+}
+
+.sh-masthead .sh-caret { color: var(--sh-amber-ink); }
+
+.sh-masthead .sh-sitetitle { display: inline-block; }
+
+/* the bio reads as a comment block: one # per paragraph, one rule down the side */
+.sh-bio {
+  display: block;
+  margin-bottom: 3.5rem;
+}
+
+.sh-bio .sh-bio-text {
+  border-left: 2px solid var(--sh-rule);
+  padding-left: 1.125rem;
+  max-width: 62ch;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+.sh-bio .sh-bio-text p::before {
+  content: "# ";
+  color: var(--sh-hash-ink);
+}
+
+.sh-bio .sh-bio-foot {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-left: 1.125rem;
+}
+
+.sh-bio .sh-bio-dp {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 2px;
+}
+
+.sh-bio #social-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0;
+}
+
+.sh-bio #social-wrapper img { margin: 0; }
+
+@media (max-width: 640px) {
+  .sh-bio .sh-bio-text { max-width: none; }
+}
+
+/* The theme stacks the masthead into a column under 750px and pushes the theme
+   toggle to its own row with a 3rem gap. That was tolerable under a one-line
+   title; under a prompt plus a wrapped title it strands the toggle. Keep the
+   row, and let the toggle sit against the top of the block. */
+@media screen and (max-width: 750px) {
+  .sh-masthead {
+    flex-direction: row;
+    gap: 1rem;
+  }
+  .sh-masthead #dark-mode-toggle {
+    align-self: flex-start;
+  }
 }

@@ -1,5 +1,8 @@
-<header>
-  <a class="site-title" href="{{site.baseurl}}/">{{site.title}}</a>
+<header class="sh-masthead">
+  <div class="sh-masthead-id">
+    <p class="sh-mast-prompt"><span class="sh-mast-ps">PS&nbsp;&gt;</span>~</p>
+    <a class="site-title sh-sitetitle" href="{{site.baseurl}}/">{{site.title}}{% unless page.layout == "post" %}<span class="sh-caret" aria-hidden="true">█</span>{% endunless %}</a>
+  </div>
   <!-- dark/light mode -->
   <span id="dark-mode-toggle" style="cursor: pointer">
     <svg
