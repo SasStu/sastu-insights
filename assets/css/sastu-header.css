@@ -24,38 +24,57 @@
 
 /* ---------- hero ---------- */
 
+/* The root is a <header>, and the theme styles that element directly
+   (padding: 2rem 0 4rem; align-items: flex-start; justify-content:
+   space-between; gap: 1rem). Those leak in and shrink-wrap the chrome bar,
+   so every one of them is reset here rather than in the theme. */
 .sh-header {
   position: relative;
   display: flex;
   flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 0;
   min-height: 420px;
+  padding: 0;
   margin: 0 0 2.5rem;
   overflow: hidden;
   isolation: isolate;
 }
 
+/* These featured images are finished header designs - they carry their own
+   title, part chip and subtitle. A light blur turns that typography back into
+   texture so it stops competing with the panel's own type. scale() hides the
+   soft rim the blur leaves at the edges. Saturation is only partly pulled:
+   the images' orange is close enough to the brand amber to be worth keeping. */
 .sh-header .sh-bg {
   position: absolute;
   inset: 0;
   z-index: 0;
   background-size: cover;
   background-position: center;
-  filter: grayscale(0.35) contrast(1.05);
+  filter: blur(4px) saturate(0.55) brightness(0.85) contrast(1.05);
+  transform: scale(1.09);
 }
 
-/* medium-dark scrim: image stays visible, type stays king */
+/* The gradient runs dark-to-light left-to-right and these images set their own
+   type on the left, so the heaviest part of the scrim lands exactly where the
+   duplicate title is. Near-solid under the panel's type, opening up on the
+   right where the artwork can still read. */
 .sh-header .sh-scrim {
   position: absolute;
   inset: 0;
   z-index: 1;
   background:
-    linear-gradient(100deg, rgba(12,13,15,0.94) 0%, rgba(12,13,15,0.86) 46%, rgba(12,13,15,0.62) 100%),
-    radial-gradient(120% 90% at 12% 100%, rgba(12,13,15,0.5) 0%, transparent 70%);
+    linear-gradient(100deg, rgba(12,13,15,0.99) 0%, rgba(12,13,15,0.96) 42%, rgba(12,13,15,0.78) 100%),
+    radial-gradient(120% 90% at 12% 100%, rgba(12,13,15,0.55) 0%, transparent 70%);
 }
 
 .sh-header > .sh-chrome,
-.sh-header > .sh-body,
-.sh-header > .sh-foot { position: relative; z-index: 2; }
+.sh-header > .sh-body { position: relative; z-index: 2; }
+
+.sh-header .sh-chrome > *,
+.sh-card .sh-chrome > * { min-width: 0; }
 
 .sh-header .sh-chrome {
   display: flex;
@@ -65,17 +84,9 @@
   flex: none;
   height: 46px;
   padding: 0 1.75rem;
-  background: color-mix(in srgb, var(--sh-chrome-bg) 88%, transparent);
+  background: color-mix(in srgb, var(--sh-chrome-bg) 95%, transparent);
   border-bottom: 1px solid var(--sh-line);
   backdrop-filter: blur(3px);
-}
-
-.sh-header .sh-path {
-  font-size: 0.875rem;
-  color: #6B6D71;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .sh-header .sh-cat,
@@ -156,15 +167,11 @@
 .sh-header .sh-read,
 .sh-card .sh-read { white-space: nowrap; }
 
-.sh-header .sh-foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0 2.75rem 1.875rem;
-  font-size: 0.875rem;
-  color: var(--sh-faint);
-}
+/* the right side of the panel stays open, so lift the dim type that crosses it */
+.sh-header.sh-has-image .sh-prompt,
+.sh-header.sh-has-image .sh-cont { color: #B6B9BE; }
+
+.sh-header.sh-has-image .sh-hash { color: #6E7278; }
 
 /* ---------- caret ---------- */
 
@@ -211,18 +218,25 @@
   border-bottom: 1px solid var(--sh-line);
 }
 
-.sh-card .sh-meta,
-.sh-card .sh-cat { font-size: 0.75rem; }
-
+.sh-header .sh-meta,
 .sh-card .sh-meta {
   display: inline-flex;
   align-items: center;
   gap: 0.875rem;
   min-width: 0;
+  overflow: hidden;
   color: #6B6D71;
 }
 
-.sh-card .sh-date { font-variant-numeric: tabular-nums; }
+.sh-header .sh-meta { font-size: 0.875rem; }
+.sh-card .sh-meta,
+.sh-card .sh-cat { font-size: 0.75rem; }
+
+.sh-header .sh-date,
+.sh-card .sh-date {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
 
 .sh-card .sh-card-body {
   flex: 1;
@@ -248,14 +262,15 @@
 
 @media (max-width: 640px) {
   .sh-header { min-height: 320px; }
-  .sh-header .sh-path { display: none; }
   .sh-header .sh-chrome { justify-content: flex-end; padding: 0 1.125rem; }
   .sh-header .sh-body { padding: 1.5rem 1.25rem; gap: 1rem; }
-  .sh-header .sh-foot { padding: 0 1.25rem 1.25rem; font-size: 0.75rem; }
   .sh-header .sh-prompt,
   .sh-header .sh-cont { font-size: 0.9375rem; }
   .sh-header .sh-title { max-width: none; }
-  .sh-header .sh-foot .sh-read { display: none; }
+  .sh-header .sh-read { display: none; }
+  .sh-header .sh-meta { font-size: 0.75rem; }
+  .sh-header .sh-cat,
+  .sh-card .sh-cat { font-size: 0.6875rem; letter-spacing: 0.1em; gap: 0.5rem; }
   .sh-card .sh-read { display: none; }
 }
 

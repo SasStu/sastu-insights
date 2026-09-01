@@ -69,7 +69,10 @@
   {%- endif %}
 
   <div class="sh-chrome">
-    <span class="sh-path">{{ page.url }}</span>
+    <span class="sh-meta">
+      <time class="sh-date" datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: '%Y-%m-%d' }}</time>
+      <span class="sh-read">{{ sh_mins }} min read</span>
+    </span>
     <span class="sh-cat"><i class="sh-dot" aria-hidden="true"></i>{{ cat }}{% if sh_part != '' %} · {{ sh_part }}{% endif %}</span>
   </div>
 
@@ -79,11 +82,5 @@
     {%- if sh_cont != '' %}
     <p class="sh-cont"><span class="sh-hash">#</span>{{ sh_cont }}</p>
     {%- endif %}
-  </div>
-
-  <div class="sh-foot">
-    <span>sastu-insights.com</span>
-    <span class="sh-read">{{ sh_mins }} min read</span>
-    <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: '%Y-%m-%d' }}</time>
   </div>
 </header>
