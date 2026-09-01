@@ -9,6 +9,7 @@ tags:
   - "PowerShell"
   - "Hyper-V"
 image: /assets/images/2026/05/HVFactory-Environments.png
+show_image: true
 header_title: "HyperV.VMFactory: VM Environments"
 header_cont: "Service Orchestration, and Mermaid Diagrams"
 ---

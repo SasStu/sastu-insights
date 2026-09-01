@@ -14,6 +14,7 @@ tags:
   - "Remediation"
   - "Win32 App"
 image: /assets/images/2026/07/sso-prompt-auto-accept-header.png
+show_image: true
 ---
 
 If you manage Windows devices in the European Economic Area, you have met this dialog: a user signs in, opens Word, and Windows asks whether it may share the signed-in work account with Microsoft apps - "Continue to sign in". Microsoft added the prompt to comply with the Digital Markets Act, and on paper it gives users control over their credentials. In a managed environment it mostly gives them a new way to break single sign-on.

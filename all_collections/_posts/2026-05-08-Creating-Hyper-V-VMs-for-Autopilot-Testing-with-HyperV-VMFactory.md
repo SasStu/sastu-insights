@@ -10,6 +10,7 @@ tags:
   - "Autopilot"
   - "PowerShell"
 image: /assets/images/2026/04/HVVideo.gif
+show_image: true
 ---
 
 # Creating Hyper-V VMs for Autopilot Testing with HyperV.VMFactory

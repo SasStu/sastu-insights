@@ -12,6 +12,7 @@ tags:
   - "Microsoft Defender"
   - "macOS"
 image: /assets/images/2026/06/mde-macos-device-control-editor-start.png
+show_image: true
 ---
 
 In my [previous article](https://sastu-insights.com/posts/Controlling-USB-Access-on-Windows-Devices-with-Microsoft-Intune/) I covered USB device control for Windows via Microsoft Intune. The macOS counterpart follows the same conceptual model -- device groups, enforcement rules, and a default-deny posture -- but the technical implementation is entirely different.

@@ -7,7 +7,12 @@
       <section class="article">
         {% if page.console_header %}
         {% include sastu-header.html %}
-        {% if page.image %}
+        {% comment %}
+          The featured image is the panel background on every post. Set
+          show_image: true to ALSO render it below the header, for the posts
+          whose image is a diagram worth reading rather than just texture.
+        {% endcomment %}
+        {% if page.image and page.show_image %}
         <figure class="sh-figure">
           <img src="{{page.image | relative_url}}" alt="{{page.title}}">
         </figure>
