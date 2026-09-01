@@ -15,7 +15,6 @@ tags:
   - "Win32 App"
   - "Drive Mapping"
 image: /assets/images/2026/08/ad-mappings-part3-header.png
-console_header: true
 header_part: "Part 3 of 3"
 ---
 

@@ -25,6 +25,7 @@ defaults:
     values:
       layout: "post"
       permalink: /posts/:title/
+      console_header: true
   - scope:
       path: ""
       type: "drafts"
