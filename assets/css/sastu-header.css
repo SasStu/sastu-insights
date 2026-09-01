@@ -408,3 +408,19 @@
     align-self: flex-start;
   }
 }
+
+/* ---------- featured image ---------- */
+/* The panel is the header now, so the featured image comes back below it as a
+   figure. These are explanatory diagrams and blurred texture behind the panel
+   is not where anyone reads them. The border follows the theme: a white
+   illustration needs an edge on a light page and none on a dark one. */
+
+.sh-figure {
+  margin: 0 0 2.5rem;
+  border: 1px solid var(--gray-3);
+}
+
+.sh-figure img {
+  display: block;
+  width: 100%;
+}
