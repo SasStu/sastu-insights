@@ -13,6 +13,7 @@ tags:
   - "Enrollment"
   - "Microsoft Graph"
   - "PowerShell"
+header_prompt: "~/apple/enrollment/powershell"
 image: /assets/images/2026/07/apple-ade-policy-migration-script-header.png
 header_title: "Automatically Migrate Apple Enrollment Profiles"
 header_cont: "as Enrollment Policy"

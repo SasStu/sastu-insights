@@ -42,13 +42,22 @@
 {%- assign sh_title = p.header_title | default: display -%}
 {%- assign sh_part  = p.header_part  | default: part -%}
 
+{%- comment -%} prompt path from tags, and reading time {%- endcomment -%}
+{%- include sastu-header-tags.html -%}
+{%- assign sh_words = p.content | strip_html | number_of_words -%}
+{%- assign sh_mins = sh_words | divided_by: 220 -%}
+{%- if sh_mins < 1 %}{% assign sh_mins = 1 %}{% endif -%}
+
 <a class="sh-card" href="{{ p.url | relative_url }}" style="--sh-hue: {{ hue }};">
   <span class="sh-chrome">
-    <time class="sh-date" datetime="{{ p.date | date_to_xmlschema }}">{{ p.date | date: '%Y-%m-%d' }}</time>
+    <span class="sh-meta">
+      <time class="sh-date" datetime="{{ p.date | date_to_xmlschema }}">{{ p.date | date: '%Y-%m-%d' }}</time>
+      <span class="sh-read">{{ sh_mins }} min</span>
+    </span>
     <span class="sh-cat"><i class="sh-dot" aria-hidden="true"></i>{{ cat }}{% if sh_part != '' %} · {{ sh_part }}{% endif %}</span>
   </span>
   <span class="sh-card-body">
-    <span class="sh-prompt"><span class="sh-ps">PS&nbsp;&gt;</span>~{{ p.url | remove: '.html' }}</span>
+    <span class="sh-prompt"><span class="sh-ps">PS&nbsp;&gt;</span>{% if p.header_prompt %}{{ p.header_prompt }}{% else %}~{{ sh_tagpath }}{% endif %}</span>
     <span class="sh-card-title">{{ sh_title }}<span class="sh-caret" aria-hidden="true">█</span></span>
   </span>
 </a>

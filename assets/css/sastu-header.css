@@ -153,6 +153,9 @@
   margin-right: 0.625rem;
 }
 
+.sh-header .sh-read,
+.sh-card .sh-read { white-space: nowrap; }
+
 .sh-header .sh-foot {
   display: flex;
   align-items: center;
@@ -208,13 +211,18 @@
   border-bottom: 1px solid var(--sh-line);
 }
 
-.sh-card .sh-date,
+.sh-card .sh-meta,
 .sh-card .sh-cat { font-size: 0.75rem; }
 
-.sh-card .sh-date {
+.sh-card .sh-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.875rem;
+  min-width: 0;
   color: #6B6D71;
-  font-variant-numeric: tabular-nums;
 }
+
+.sh-card .sh-date { font-variant-numeric: tabular-nums; }
 
 .sh-card .sh-card-body {
   flex: 1;
@@ -247,6 +255,8 @@
   .sh-header .sh-prompt,
   .sh-header .sh-cont { font-size: 0.9375rem; }
   .sh-header .sh-title { max-width: none; }
+  .sh-header .sh-foot .sh-read { display: none; }
+  .sh-card .sh-read { display: none; }
 }
 
 /* ---------- card grid ---------- */

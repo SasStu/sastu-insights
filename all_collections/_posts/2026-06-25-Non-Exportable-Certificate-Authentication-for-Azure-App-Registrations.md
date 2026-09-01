@@ -13,6 +13,7 @@ tags:
   - "PowerShell"
   - "Microsoft Graph"
   - "Entra ID"
+header_prompt: "~/app-registration/certificate-authentication/tpm"
 image: /assets/images/2026/06/app-reg-cert-header.png
 ---
 

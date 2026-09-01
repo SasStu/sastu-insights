@@ -1,0 +1,22 @@
+{% comment %}
+  Shared prompt-path derivation. Expects `p` (a post) and `cat` (its resolved
+  category) assigned by the caller; leaves `sh_tagpath` behind for it.
+
+  Uses the LAST tags, not the first: on this blog tags run general -> specific,
+  so the tail is what distinguishes sibling posts. The first three tags of
+  Parts 1, 2 and 3 are identical; the last three are not.
+
+  Each tag is slugified on its own - slugify would eat the "/" separators.
+{% endcomment %}
+{%- assign rest = p.tags | where_exp: 't', 't != cat' -%}
+{%- assign sh_tagpath = '' -%}
+{%- if rest.size > 0 -%}
+  {%- if rest.size > 3 -%}{%- assign rest = rest | slice: -3, 3 -%}{%- endif -%}
+  {%- for t in rest -%}
+    {%- assign seg = t | slugify -%}
+    {%- assign sh_tagpath = sh_tagpath | append: '/' | append: seg -%}
+  {%- endfor -%}
+{%- else -%}
+  {%- assign seg = cat | slugify -%}
+  {%- assign sh_tagpath = '/' | append: seg -%}
+{%- endif -%}

@@ -12,7 +12,8 @@ tags:
   - "macOS"
   - "Enrollment"
   - "Microsoft Graph"
-  - "PowerShell"
+  - "PowerShell"
+header_prompt: "~/apple/ios/enrollment"
 image: /assets/images/2026/07/apple-ade-enrollment-policies-header.png
 ---
 

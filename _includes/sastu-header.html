@@ -55,6 +55,13 @@
 {%- assign sh_prompt = page.header_prompt | default: nil -%}
 {%- assign sh_image  = page.header_image  | default: page.image -%}
 
+{%- comment -%} prompt path from tags, and reading time {%- endcomment -%}
+{%- assign p = page -%}
+{%- include sastu-header-tags.html -%}
+{%- assign sh_words = page.content | strip_html | number_of_words -%}
+{%- assign sh_mins = sh_words | divided_by: 220 -%}
+{%- if sh_mins < 1 %}{% assign sh_mins = 1 %}{% endif -%}
+
 <header class="sh-header{% if sh_image %} sh-has-image{% endif %}" style="--sh-hue: {{ hue }};"{% if sh_image %} data-sh-image="true"{% endif %}>
   {%- if sh_image %}
   <div class="sh-bg" style="background-image: url('{{ sh_image | relative_url }}');" aria-hidden="true"></div>
@@ -67,7 +74,7 @@
   </div>
 
   <div class="sh-body">
-    <p class="sh-prompt"><span class="sh-ps">PS&nbsp;&gt;</span>{% if sh_prompt %}{{ sh_prompt }}{% else %}~{{ page.url | remove: '.html' }}{% endif %}</p>
+    <p class="sh-prompt"><span class="sh-ps">PS&nbsp;&gt;</span>{% if sh_prompt %}{{ sh_prompt }}{% else %}~{{ sh_tagpath }}{% endif %}</p>
     <h1 class="sh-title">{{ sh_title }}<span class="sh-caret" aria-hidden="true">█</span></h1>
     {%- if sh_cont != '' %}
     <p class="sh-cont"><span class="sh-hash">#</span>{{ sh_cont }}</p>
@@ -76,6 +83,7 @@
 
   <div class="sh-foot">
     <span>sastu-insights.com</span>
+    <span class="sh-read">{{ sh_mins }} min read</span>
     <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: '%Y-%m-%d' }}</time>
   </div>
 </header>
