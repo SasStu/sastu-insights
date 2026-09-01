@@ -1,0 +1,81 @@
+{% comment %}
+  Sastu Insights — console post header.
+  Derives everything from page.title. Optional front-matter overrides:
+    header_title:    display line (default: title up to the first with/using/for/and)
+    header_cont:     # continuation line
+    header_prompt:   prompt line (default: ~/posts/<slug>)
+    header_category: category label (default: first category, then first tag)
+    header_part:     e.g. "Part 3 of 3" (default: "Part N" parsed off the title)
+    image:           background image behind the header (optional)
+{% endcomment %}
+
+{%- assign raw = page.title -%}
+{%- assign part = '' -%}
+
+{%- comment -%} peel a leading "Part N:" off the title {%- endcomment -%}
+{%- if raw contains ':' -%}
+  {%- assign pre = raw | split: ':' | first -%}
+  {%- if pre contains 'Part' or pre contains 'Teil' -%}
+    {%- assign part = pre | strip -%}
+    {%- assign raw = raw | remove_first: pre | remove_first: ':' | strip -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- comment -%} split the rest at the first connector {%- endcomment -%}
+{%- assign display = raw -%}
+{%- assign cont = '' -%}
+{%- assign seps = ' with | using | for | and | to | in ' | split: '|' -%}
+{%- for s in seps -%}
+  {%- if cont == '' and display contains s -%}
+    {%- assign head = display | split: s | first -%}
+    {%- assign tail = display | remove_first: head | remove_first: s -%}
+    {%- if head.size > 12 -%}
+      {%- assign display = head | strip -%}
+      {%- assign cont = s | strip | append: ' ' | append: tail | strip -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- comment -%} category + hue {%- endcomment -%}
+{%- assign cat = page.header_category | default: page.categories.first | default: page.tags.first | default: 'Notes' -%}
+{%- assign hue = 70 -%}
+{%- case cat -%}
+  {%- when 'Entra ID' -%}{% assign hue = 255 %}
+  {%- when 'Azure' -%}{% assign hue = 220 %}
+  {%- when 'Hyper-V' -%}{% assign hue = 160 %}
+  {%- when 'SCCM' -%}{% assign hue = 285 %}
+  {%- when 'Group Policy' -%}{% assign hue = 320 %}
+  {%- when 'Security' -%}{% assign hue = 25 %}
+  {%- when 'Autopilot' -%}{% assign hue = 130 %}
+{%- endcase -%}
+
+{%- assign sh_title  = page.header_title  | default: display -%}
+{%- assign sh_cont   = page.header_cont   | default: cont -%}
+{%- assign sh_part   = page.header_part   | default: part -%}
+{%- assign sh_prompt = page.header_prompt | default: nil -%}
+{%- assign sh_image  = page.header_image  | default: page.image -%}
+
+<header class="sh-header{% if sh_image %} sh-has-image{% endif %}" style="--sh-hue: {{ hue }};"{% if sh_image %} data-sh-image="true"{% endif %}>
+  {%- if sh_image %}
+  <div class="sh-bg" style="background-image: url('{{ sh_image | relative_url }}');" aria-hidden="true"></div>
+  <div class="sh-scrim" aria-hidden="true"></div>
+  {%- endif %}
+
+  <div class="sh-chrome">
+    <span class="sh-path">{{ page.url }}</span>
+    <span class="sh-cat"><i class="sh-dot" aria-hidden="true"></i>{{ cat }}{% if sh_part != '' %} · {{ sh_part }}{% endif %}</span>
+  </div>
+
+  <div class="sh-body">
+    <p class="sh-prompt"><span class="sh-ps">PS&nbsp;&gt;</span>{% if sh_prompt %}{{ sh_prompt }}{% else %}~{{ page.url | remove: '.html' }}{% endif %}</p>
+    <h1 class="sh-title">{{ sh_title }}<span class="sh-caret" aria-hidden="true">█</span></h1>
+    {%- if sh_cont != '' %}
+    <p class="sh-cont"><span class="sh-hash">#</span>{{ sh_cont }}</p>
+    {%- endif %}
+  </div>
+
+  <div class="sh-foot">
+    <span>sastu-insights.com</span>
+    <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: '%Y-%m-%d' }}</time>
+  </div>
+</header>

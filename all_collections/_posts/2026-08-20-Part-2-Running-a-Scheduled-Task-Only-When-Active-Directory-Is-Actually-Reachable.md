@@ -14,6 +14,9 @@ tags:
   - "Scheduled Task"
   - "Drive Mapping"
 image: /assets/images/2026/08/ad-mappings-part2-header.png
+header_title: "Running a Scheduled Task"
+header_cont: "only when Active Directory is actually reachable"
+header_part: "Part 2 of 3"
 ---
 
 > Part 2 of 3 in the *Drive and printer mappings for Entra-joined devices* series.

@@ -13,6 +13,9 @@ tags:
   - "PowerShell"
   - "Drive Mapping"
 image: /assets/images/2026/08/ad-mappings-cloud-only-header.png
+header_title: "Using Active Directory Information on Cloud-Only Devices"
+header_cont: "to Map Printers and Shares"
+header_part: "Part 1 of 3"
 ---
 
 > Part 1 of 3 in the *Drive and printer mappings for Entra-joined devices* series.

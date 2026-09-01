@@ -5,6 +5,9 @@
     <main>
       {% include header.html %}
       <section class="article">
+        {% if page.console_header %}
+        {% include sastu-header.html %}
+        {% else %}
         <div class="article-header">
           <h2 class="article-title">{{page.title}}</h2>
           <small class="date">{{page.date | date_to_string}}</small>
@@ -16,6 +19,7 @@
         </div>
         {% if page.image %}
         <img class="article-title-image" src="{{page.image | relative_url}}" alt="{{page.title}}">
+        {% endif %}
         {% endif %}
         <div class="content">{{content}}</div>
       </section>

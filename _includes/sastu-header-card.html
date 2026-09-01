@@ -1,0 +1,48 @@
+{% comment %}
+  Homepage / post-list thumbnail version of the console header.
+  Usage inside a posts loop:  {% include sastu-header-card.html post=post %}
+{% endcomment %}
+
+{%- assign p = include.post -%}
+{%- assign raw = p.title -%}
+{%- if raw contains ':' -%}
+  {%- assign pre = raw | split: ':' | first -%}
+  {%- if pre contains 'Part' or pre contains 'Teil' -%}
+    {%- assign raw = raw | remove_first: pre | remove_first: ':' | strip -%}
+  {%- endif -%}
+{%- endif -%}
+{%- assign display = raw -%}
+{%- assign seps = ' with | using | for | and | to | in ' | split: '|' -%}
+{%- assign done = false -%}
+{%- for s in seps -%}
+  {%- if done == false and display contains s -%}
+    {%- assign head = display | split: s | first -%}
+    {%- if head.size > 12 -%}
+      {%- assign display = head | strip -%}
+      {%- assign done = true -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- assign cat = p.header_category | default: p.categories.first | default: p.tags.first | default: 'Notes' -%}
+{%- assign hue = 70 -%}
+{%- case cat -%}
+  {%- when 'Entra ID' -%}{% assign hue = 255 %}
+  {%- when 'Azure' -%}{% assign hue = 220 %}
+  {%- when 'Hyper-V' -%}{% assign hue = 160 %}
+  {%- when 'SCCM' -%}{% assign hue = 285 %}
+  {%- when 'Group Policy' -%}{% assign hue = 320 %}
+  {%- when 'Security' -%}{% assign hue = 25 %}
+  {%- when 'Autopilot' -%}{% assign hue = 130 %}
+{%- endcase -%}
+
+<a class="sh-card" href="{{ p.url | relative_url }}" style="--sh-hue: {{ hue }};">
+  <span class="sh-chrome">
+    <span class="sh-path">{{ p.url }}</span>
+    <span class="sh-cat"><i class="sh-dot" aria-hidden="true"></i>{{ cat }}</span>
+  </span>
+  <span class="sh-card-body">
+    <span class="sh-prompt"><span class="sh-ps">PS&nbsp;&gt;</span>~{{ p.url | remove: '.html' }}</span>
+    <span class="sh-card-title">{{ display }}<span class="sh-caret" aria-hidden="true">█</span></span>
+  </span>
+</a>

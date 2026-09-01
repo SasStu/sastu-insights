@@ -13,6 +13,8 @@ tags:
     - 'Group Policy'
     - 'Windows'
     - 'Windows Hello'
+header_title: "Something went wrong"
+header_cont: "when enabling Windows 10 facial authentication"
 ---
 
 ## Problem

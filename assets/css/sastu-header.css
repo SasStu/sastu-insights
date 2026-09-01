@@ -1,0 +1,253 @@
+/* Sastu Insights — console post header.
+   Fully scoped: every rule is under .sh-header or .sh-card. Touches no theme styles. */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+.sh-header,
+.sh-card {
+  --sh-amber: #F0A03C;
+  --sh-bg: #0C0D0F;
+  --sh-chrome-bg: #15171A;
+  --sh-line: #23262A;
+  --sh-fg: #F4F2EE;
+  --sh-dim: #9A9DA2;
+  --sh-faint: #5C5F64;
+  --sh-accent: oklch(0.76 0.13 var(--sh-hue, 70));
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--sh-bg);
+  color: var(--sh-fg);
+  box-sizing: border-box;
+}
+
+.sh-header *,
+.sh-card * { box-sizing: border-box; }
+
+/* ---------- hero ---------- */
+
+.sh-header {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 420px;
+  margin: 0 0 2.5rem;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.sh-header .sh-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(0.35) contrast(1.05);
+}
+
+/* medium-dark scrim: image stays visible, type stays king */
+.sh-header .sh-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(100deg, rgba(12,13,15,0.94) 0%, rgba(12,13,15,0.86) 46%, rgba(12,13,15,0.62) 100%),
+    radial-gradient(120% 90% at 12% 100%, rgba(12,13,15,0.5) 0%, transparent 70%);
+}
+
+.sh-header > .sh-chrome,
+.sh-header > .sh-body,
+.sh-header > .sh-foot { position: relative; z-index: 2; }
+
+.sh-header .sh-chrome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex: none;
+  height: 46px;
+  padding: 0 1.75rem;
+  background: color-mix(in srgb, var(--sh-chrome-bg) 88%, transparent);
+  border-bottom: 1px solid var(--sh-line);
+  backdrop-filter: blur(3px);
+}
+
+.sh-header .sh-path,
+.sh-card .sh-path {
+  font-size: 0.875rem;
+  color: #6B6D71;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sh-header .sh-cat,
+.sh-card .sh-cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sh-accent);
+}
+
+.sh-header .sh-dot,
+.sh-card .sh-dot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  background: var(--sh-accent);
+}
+
+.sh-header .sh-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.375rem;
+  padding: 2.375rem 2.75rem;
+}
+
+.sh-header .sh-prompt,
+.sh-card .sh-prompt {
+  margin: 0;
+  font-size: 1.0625rem;
+  color: var(--sh-dim);
+  overflow-wrap: anywhere;
+}
+
+.sh-header .sh-ps,
+.sh-card .sh-ps {
+  color: var(--sh-amber);
+  margin-right: 0.625rem;
+}
+
+.sh-header .sh-title {
+  margin: 0;
+  font-family: inherit;
+  font-size: clamp(1.75rem, 4.2vw, 2.875rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--sh-fg);
+  max-width: 22ch;
+  text-wrap: balance;
+}
+
+.sh-header .sh-cont {
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  color: var(--sh-dim);
+  max-width: 60ch;
+}
+
+.sh-header .sh-hash,
+.sh-card .sh-hash {
+  color: #4E5157;
+  margin-right: 0.625rem;
+}
+
+.sh-header .sh-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 2.75rem 1.875rem;
+  font-size: 0.875rem;
+  color: var(--sh-faint);
+}
+
+/* ---------- caret ---------- */
+
+.sh-header .sh-caret,
+.sh-card .sh-caret {
+  color: var(--sh-amber);
+  margin-left: 0.15em;
+  animation: sh-blink 1.24s steps(1, end) infinite;
+}
+
+@keyframes sh-blink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .sh-header .sh-caret,
+  .sh-card .sh-caret { animation: none; }
+}
+
+/* ---------- list card ---------- */
+
+.sh-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+  text-decoration: none;
+  border: 1px solid var(--sh-line);
+  transition: border-color 0.18s ease, transform 0.18s ease;
+}
+
+.sh-card:hover,
+.sh-card:focus-visible {
+  border-color: color-mix(in srgb, var(--sh-accent) 55%, var(--sh-line));
+  transform: translateY(-2px);
+}
+
+.sh-card .sh-chrome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex: none;
+  height: 34px;
+  padding: 0 1.125rem;
+  background: var(--sh-chrome-bg);
+  border-bottom: 1px solid var(--sh-line);
+}
+
+.sh-card .sh-path,
+.sh-card .sh-cat { font-size: 0.75rem; }
+
+.sh-card .sh-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.625rem;
+  padding: 1.25rem 1.375rem;
+}
+
+.sh-card .sh-prompt { font-size: 0.8125rem; color: #6B6D71; }
+
+.sh-card .sh-card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--sh-fg);
+  max-width: 24ch;
+}
+
+/* ---------- narrow screens ---------- */
+
+@media (max-width: 640px) {
+  .sh-header { min-height: 320px; }
+  .sh-header .sh-path { display: none; }
+  .sh-header .sh-chrome { justify-content: flex-end; padding: 0 1.125rem; }
+  .sh-header .sh-body { padding: 1.5rem 1.25rem; gap: 1rem; }
+  .sh-header .sh-foot { padding: 0 1.25rem 1.25rem; font-size: 0.75rem; }
+  .sh-header .sh-prompt,
+  .sh-header .sh-cont { font-size: 0.9375rem; }
+  .sh-header .sh-title { max-width: none; }
+  .sh-card .sh-path { display: none; }
+}
+
+/* ---------- card grid ---------- */
+/* Own wrapper class, prefixed like the rest. Sets only the track sizing so the
+   theme's own list styles stay untouched. */
+
+.sh-card-grid {
+  /* 285px, not 320px: the theme caps main at 650px, and 320px tracks fall back
+     to a single column there. 285px gives the intended two-up thumbnail grid. */
+  grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+  gap: 1rem;
+}

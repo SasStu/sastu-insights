@@ -14,6 +14,8 @@ tags:
   - "Microsoft Graph"
   - "PowerShell"
 image: /assets/images/2026/07/apple-ade-policy-migration-script-header.png
+header_title: "Automatically Migrate Apple Enrollment Profiles"
+header_cont: "as Enrollment Policy"
 ---
 
 After I wrote about [migrating Apple ADE enrollment profiles to the new enrollment policies](/posts/Migrating-from-Apple-Enrollment-Profiles-to-the-Enrollment-Policies/), someone asked me on LinkedIn whether the recreation step could be scripted. The article covers that part manually: open the wizard, tick through every Setup Assistant screen, one profile at a time. That's fine for a single token with two or three profiles. It stops being fine once you're doing it across several enrollment program tokens with iOS and macOS profiles on each.

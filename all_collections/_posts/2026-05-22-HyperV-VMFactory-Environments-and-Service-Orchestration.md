@@ -9,6 +9,8 @@ tags:
   - "PowerShell"
   - "Hyper-V"
 image: /assets/images/2026/05/HVFactory-Environments.png
+header_title: "HyperV.VMFactory: VM Environments"
+header_cont: "Service Orchestration, and Mermaid Diagrams"
 ---
 
 A few weeks ago I wrote about [HyperV.VMFactory](https://github.com/SasStu/HyperV.VMFactory) - a PowerShell module that wraps Hyper-V VM creation into a single well-structured cmdlet with sane defaults for Windows and Autopilot scenarios. Since then the module has grown quite a bit. Two sets of changes are worth writing up: a small quality-of-life addition to `New-HyperVVM`, and a much larger set of features that I've ported in from an older private module called PSHVTag - covering VM environment grouping, dependency-ordered start/stop, and Mermaid topology diagrams.
