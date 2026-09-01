@@ -1,13 +1,13 @@
 name: Sascha Stumpler
 dp: https://avatars.githubusercontent.com/u/28406607?s=96&v=4
-description: "
+description: |
   <p>
-  Lead Consultant and Cloud Architect focused on Azure, Microsoft 365, and Endpoint Security. I specialize in Intune, Microsoft Defender for Endpoint, Endpoint Privilege Management, Entra ID, and Microsoft 365 in general.
+  Lead Consultant and Cloud Architect focused on Azure, Microsoft 365, and Endpoint Security. I specialize in Intune, Microsoft Defender for Endpoint, Endpoint Privilege Management, Entra ID, and Microsoft 365 in general. I have been with <a href="https://www.perinova.com" target="_blank" rel="noopener noreferrer">perinova IT-Management GmbH</a> for over 15 years.
   </p>
   <br/>
   <p>
   On this blog I share practical insights from the field - mostly implementation guides and lessons learned from real deployments. Expect deep dives on Intune policies, device control, and Windows security hardening.
-  </p>"
+  </p>
 email: sastu@sastu-insights.com
 contact:
   - title: linkedin
