@@ -27,9 +27,12 @@
   {%- endif -%}
 {%- endfor -%}
 
-{%- assign cat = p.header_category | default: p.categories.first | default: p.tags.first | default: 'Notes' -%}
+{%- assign cat = p.categories | join: ' · ' -%}
+{%- if cat == '' -%}{%- assign cat = p.tags.first | default: 'Notes' -%}{%- endif -%}
+{%- assign cat = p.header_category | default: cat -%}
+{%- assign hue_key = p.categories.first | default: p.tags.first -%}
 {%- assign hue = 70 -%}
-{%- case cat -%}
+{%- case hue_key -%}
   {%- when 'Entra ID' -%}{% assign hue = 255 %}
   {%- when 'Azure' -%}{% assign hue = 220 %}
   {%- when 'Hyper-V' -%}{% assign hue = 160 %}

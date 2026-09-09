@@ -4,7 +4,7 @@
     header_title:    display line (default: title up to the first with/using/for/and)
     header_cont:     # continuation line
     header_prompt:   prompt line (default: ~/posts/<slug>)
-    header_category: category label (default: first category, then first tag)
+    header_category: category label (default: all categories joined, then first tag)
     header_part:     e.g. "Part 3 of 3" (default: "Part N" parsed off the title)
     image:           background image behind the header (optional)
 {% endcomment %}
@@ -36,10 +36,13 @@
   {%- endif -%}
 {%- endfor -%}
 
-{%- comment -%} category + hue {%- endcomment -%}
-{%- assign cat = page.header_category | default: page.categories.first | default: page.tags.first | default: 'Notes' -%}
+{%- comment -%} label lists every category; hue keys off the first one only {%- endcomment -%}
+{%- assign cat = page.categories | join: ' · ' -%}
+{%- if cat == '' -%}{%- assign cat = page.tags.first | default: 'Notes' -%}{%- endif -%}
+{%- assign cat = page.header_category | default: cat -%}
+{%- assign hue_key = page.categories.first | default: page.tags.first -%}
 {%- assign hue = 70 -%}
-{%- case cat -%}
+{%- case hue_key -%}
   {%- when 'Entra ID' -%}{% assign hue = 255 %}
   {%- when 'Azure' -%}{% assign hue = 220 %}
   {%- when 'Hyper-V' -%}{% assign hue = 160 %}
