@@ -28,6 +28,39 @@ The part that will not fit into any set of session notes: I had a blast. For fou
 
 What follows is not a complete conference report. It is the set of things that were new to me, that changed my mind about something, or that I wanted to write down before I forgot them. Sessions I attended that mostly confirmed what we already do get a short mention or none at all.
 
+## Table of Contents
+
+- [Three threads running through the week](#three-threads-running-through-the-week)
+- [Day 1, Monday](#day-1-monday)
+  - [Rethinking the Endpoint: The Forces Reshaping How We Manage and Secure Work](#rethinking-the-endpoint-the-forces-reshaping-how-we-manage-and-secure-work)
+  - [Houston, We Have a Migration: Migrating Apple Devices across MDMs](#houston-we-have-a-migration-migrating-apple-devices-across-mdms)
+  - [Intune Architecture Explained: Behind Windows Device Management](#intune-architecture-explained-behind-windows-device-management)
+  - [New OSDeploy Tools](#new-osdeploy-tools)
+  - [Cloud Windows Imaging Revolution: What's next](#cloud-windows-imaging-revolution-whats-next)
+- [Day 2, Tuesday](#day-2-tuesday)
+  - [Beyond Deployment: Sustaining Windows 11 Excellence](#beyond-deployment-sustaining-windows-11-excellence)
+  - [Surviving Microsoft Security at Scale: An MSP's Guide to Intune, Entra and Defender](#surviving-microsoft-security-at-scale-an-msps-guide-to-intune-entra-and-defender)
+  - [Every Device Is a Security Boundary: Secure It by Design](#every-device-is-a-security-boundary-secure-it-by-design)
+  - [11 Ways to Hack Windows 11](#11-ways-to-hack-windows-11)
+  - [The Art of Killing Local Admin](#the-art-of-killing-local-admin)
+  - [Hilarious History of Windows](#hilarious-history-of-windows)
+- [Day 3, Wednesday](#day-3-wednesday)
+  - [AI Didn't Create the Gap. It Ended the Grace Period.](#ai-didnt-create-the-gap-it-ended-the-grace-period)
+  - [Cybersecurity: from Disabler to Enabler](#cybersecurity-from-disabler-to-enabler)
+  - [Modern Windows Security Bypassed](#modern-windows-security-bypassed)
+  - [IT disaster bootcamp](#it-disaster-bootcamp)
+  - [Inside the Intune Management Extension: Why Applications Fail to Install](#inside-the-intune-management-extension-why-applications-fail-to-install)
+  - [Windows Autopilot Unlocked: Tips, Tricks, and Real-World Optimisation](#windows-autopilot-unlocked-tips-tricks-and-real-world-optimisation)
+  - [Ninja Tips & Tricks, Beer Session](#ninja-tips--tricks-beer-session)
+- [Day 4, Thursday](#day-4-thursday)
+  - [Unleashing the Power of Microsoft Intune Community Tools](#unleashing-the-power-of-microsoft-intune-community-tools)
+  - [Mission: Intune-possible: What Really Runs on an Intune-Managed Windows Device](#mission-intune-possible-what-really-runs-on-an-intune-managed-windows-device)
+  - [Secure Mobile: iOS and Android realities](#secure-mobile-ios-and-android-realities)
+  - [Implementing PAW without making everyone hate you](#implementing-paw-without-making-everyone-hate-you)
+- [What I am taking back to the office](#what-i-am-taking-back-to-the-office)
+
+---
+
 ## Three threads running through the week
 
 Before the session notes, the patterns I noticed.
