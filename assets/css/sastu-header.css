@@ -262,6 +262,19 @@
   max-width: 34ch;
 }
 
+/* Subtitle line, same continuation text the hero prints under the title. Clamped
+   to two lines so a long one cannot stretch its card out of step with the grid. */
+.sh-card .sh-cont {
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--sh-dim);
+  max-width: 46ch;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
 /* ---------- narrow screens ---------- */
 
 @media (max-width: 640px) {
@@ -276,6 +289,7 @@
   .sh-header .sh-cat,
   .sh-card .sh-cat { font-size: 0.6875rem; letter-spacing: 0.1em; gap: 0.5rem; }
   .sh-card .sh-read { display: none; }
+  .sh-card .sh-cont { font-size: 0.875rem; }
 }
 
 /* ---------- card grid ---------- */

@@ -1,7 +1,7 @@
 {% comment %}
   Homepage / post-list thumbnail version of the console header.
   Usage inside a posts loop:  {% include sastu-header-card.html post=post %}
-  Honours the same header_title / header_category / header_part overrides as the hero.
+  Honours the same header_title / header_cont / header_category / header_part overrides as the hero.
 {% endcomment %}
 
 {%- assign p = include.post -%}
@@ -15,14 +15,15 @@
   {%- endif -%}
 {%- endif -%}
 {%- assign display = raw -%}
+{%- assign cont = '' -%}
 {%- assign seps = ' with | using | for | and | to | in ' | split: '|' -%}
-{%- assign done = false -%}
 {%- for s in seps -%}
-  {%- if done == false and display contains s -%}
+  {%- if cont == '' and display contains s -%}
     {%- assign head = display | split: s | first -%}
+    {%- assign tail = display | remove_first: head | remove_first: s -%}
     {%- if head.size > 12 -%}
       {%- assign display = head | strip -%}
-      {%- assign done = true -%}
+      {%- assign cont = s | strip | append: ' ' | append: tail | strip -%}
     {%- endif -%}
   {%- endif -%}
 {%- endfor -%}
@@ -43,6 +44,7 @@
 {%- endcase -%}
 
 {%- assign sh_title = p.header_title | default: display -%}
+{%- assign sh_cont  = p.header_cont  | default: cont -%}
 {%- assign sh_part  = p.header_part  | default: part -%}
 
 {%- comment -%} prompt path from tags, and reading time {%- endcomment -%}
@@ -62,5 +64,8 @@
   <span class="sh-card-body">
     <span class="sh-prompt"><span class="sh-ps">PS&nbsp;&gt;</span>{% if p.header_prompt %}{{ p.header_prompt }}{% else %}~{{ sh_tagpath }}{% endif %}</span>
     <span class="sh-card-title">{{ sh_title }}<span class="sh-caret" aria-hidden="true">█</span></span>
+    {%- if sh_cont != '' %}
+    <span class="sh-cont"><span class="sh-hash">#</span>{{ sh_cont }}</span>
+    {%- endif %}
   </span>
 </a>
