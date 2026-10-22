@@ -1,6 +1,6 @@
 ---
 title: "Intel vPro Fleet Services Part 1: Onboarding the Tenant and Connecting Entra ID"
-date: "2026-10-22T08:00:00+01:00"
+date: "2026-10-22T16:46:00+02:00"
 author: "Sascha Stumpler"
 layout: post
 categories:
