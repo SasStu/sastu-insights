@@ -95,9 +95,11 @@ All opinions and any mistakes here are my own.
 
 ## Before You Start: EU Hosting and GDPR
 
-If you are in the EU, read this before you spend time on the rest. At the time of writing, there is no EU region for Fleet Services. The terms you accept in Step 1 state that personal data is stored in the United States, with Amazon Web Services as sub-processor, and that Intel will notify customers when European hosting locations are added.
+If you are in the EU, read this before you spend time on the rest. At the time of writing, there is no EU region for Fleet Services yet. The terms you accept in Step 1 state that personal data is stored in the United States, with Amazon Web Services as sub-processor, and that Intel will notify customers when European hosting locations are added.
 
-That alone does not rule the service out. GDPR does not require EU hosting, but it does require a valid transfer mechanism for personal data that leaves the EU, such as the EU-US Data Privacy Framework or standard contractual clauses. What your data protection officer will want to know:
+There is movement, though. With the latest multi-region release, customers can request the UK region to meet a data sovereignty requirement. It also improves global connection proximity, so users outside the US connect to a region closer to them. Intel plans to extend the same option to an EU region in 2027. Until then, if US hosting is a blocker for you, ask Intel about the UK region and let your data protection officer check whether it meets your requirements.
+
+US hosting alone does not rule the service out. GDPR does not require EU hosting, but it does require a valid transfer mechanism for personal data that leaves the EU, such as the EU-US Data Privacy Framework or standard contractual clauses. What your data protection officer will want to know:
 
 - **Which personal data ends up at Intel:** the email addresses and roles of your Fleet Services users, the audit log, and device data such as names, status and hardware details.
 - **The Graph permissions:** with Entra ID RBAC enabled (Step 5), Intel's backend has application permissions to read all users, groups and group memberships of your tenant, not just the people who use the portal.
@@ -447,3 +449,7 @@ If you are in the EU, make sure your data protection officer has signed off on t
 What you do not have yet is a single managed device. In Part 2, we find the vPro devices in your fleet with a remediation, package the Fleet Services agent as an Intune app, deploy it to a pilot group and watch the devices show up in the portal.
 
 If you are reading this because you just found out that half your fleet has vPro and nobody ever provisioned it: either claim it or disable it. After 2018, those are the only two acceptable states, and with Fleet Services, claiming it is finally the easier option.
+
+---
+
+*Intel, the Intel logo, Intel vPro and Intel Active Management Technology are trademarks of Intel Corporation or its subsidiaries. Other names and brands may be claimed as the property of others.*
