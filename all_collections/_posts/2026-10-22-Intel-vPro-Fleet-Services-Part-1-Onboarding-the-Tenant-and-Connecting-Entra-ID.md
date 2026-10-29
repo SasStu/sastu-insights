@@ -79,7 +79,7 @@ You find it under **Devices > Partner portals > Intel vPro Fleet Services** in t
 | Part | Topic |
 | --- | --- |
 | **Part 1** (this article) | Onboarding the tenant, passphrase handling, connecting Entra ID SSO and RBAC |
-| Part 2 | Identifying vPro devices with a remediation, the Intune integration, and onboarding clients by building and deploying the agent as an Intune app package |
+| [Part 2](/posts/Intel-vPro-Fleet-Services-Part-2-Deploying-the-Agent-with-Intune/) | Identifying vPro devices with a remediation, fixing the MEI driver, and onboarding clients by building and deploying the agent as an Intune app package |
 | Part 3 | Managing endpoints with vPro: power actions, KVM, remote recovery |
 
 ---
@@ -97,7 +97,7 @@ All opinions and any mistakes here are my own.
 
 If you are in the EU, read this before you spend time on the rest. At the time of writing, there is no EU region for Fleet Services yet. The terms you accept in Step 1 state that personal data is stored in the United States, with Amazon Web Services as sub-processor, and that Intel will notify customers when European hosting locations are added.
 
-There is movement, though. With the latest multi-region release, customers can request the UK region to meet a data sovereignty requirement. It also improves global connection proximity, so users outside the US connect to a region closer to them. Intel plans to extend the same option to an EU region in 2027. Until then, if US hosting is a blocker for you, ask Intel about the UK region and let your data protection officer check whether it meets your requirements.
+There is movement, though. With the latest multi-region release, tenants can be hosted in a UK region to meet a data sovereignty requirement. It also improves global connection proximity, so users outside the US connect to a region closer to them. UK-headquartered organizations are typically asked during onboarding whether they have data residency requirements and want their tenant hosted in the UK. Any customer can also request a UK-hosted tenant at any time by contacting the Intel vPro Fleet Services team at [vprofleet@intel.com](mailto:vprofleet@intel.com). Intel plans to extend the same option to an EU region in 2027. Until then, if US hosting is a blocker for you, request the UK region and let your data protection officer check whether it meets your requirements.
 
 US hosting alone does not rule the service out. GDPR does not require EU hosting, but it does require a valid transfer mechanism for personal data that leaves the EU, such as the EU-US Data Privacy Framework or standard contractual clauses. What your data protection officer will want to know:
 
@@ -121,7 +121,7 @@ Everything this part needs, in one list, so you can check it before you start:
 - **Permission to create security groups and manage enterprise applications** in Entra ID for the RBAC groups and the sign-in restriction (Step 5)
 - **Microsoft Entra ID P1** to assign groups to the enterprise application (Step 5)
 
-The vPro devices themselves are not needed yet. How to find them in your fleet is part of Part 2.
+The vPro devices themselves are not needed yet. How to find them in your fleet is part of [Part 2](/posts/Intel-vPro-Fleet-Services-Part-2-Deploying-the-Agent-with-Intune/#step-4-find-out-which-devices-can-do-vpro).
 
 ---
 
@@ -172,7 +172,7 @@ The email is explicit about one thing, and it deserves to be repeated: **your In
 
 The passphrase is the part that makes this service trustworthy. The AMT credentials of your devices are encrypted with it before they are stored or transmitted, so Intel cannot decrypt them. The flip side is just as clear: if you lose it, it is gone.
 
-The email also reminds you to update the Intel Management Engine and wireless drivers and firmware on your clients before onboarding them. Keep that in mind for Part 2.
+The email also reminds you to update the Intel Management Engine and wireless drivers and firmware on your clients before onboarding them. Keep that in mind for [Part 2](/posts/Intel-vPro-Fleet-Services-Part-2-Deploying-the-Agent-with-Intune/#step-5-fix-the-mei-driver-with-a-second-app).
 
 Sign in at [vprofleet.intel.com](https://vprofleet.intel.com) with your Intel account. The portal immediately asks for the passphrase. Paste the initial passphrase from the email.
 
@@ -192,7 +192,7 @@ You are now in the portal.
 
 ![Fleet Services home](/assets/images/2026/10/intel-vpro-fleet-vprooverview.jpg)
 
-The navigation on the left gives you **Users**, **Endpoints**, **Endpoint groups**, the audit log (the clock icon), the **Resource Center** (the notepad icon), release notes and settings. Endpoints and endpoint groups stay empty until Part 2.
+The navigation on the left gives you **Users**, **Endpoints**, **Endpoint groups**, the audit log (the clock icon), the **Resource Center** (the notepad icon), release notes and settings. Endpoints and endpoint groups stay empty until [Part 2](/posts/Intel-vPro-Fleet-Services-Part-2-Deploying-the-Agent-with-Intune/).
 
 ---
 
@@ -232,7 +232,7 @@ When you finish the wizard, the portal generates a passphrase for the new user a
 
 ### Send the Request
 
-Back in the Entra ID guide, the **Send Entra ID / Intune Setup Request** link opens a pre-filled email to Intel. Fill in the tenant ID, the domains and the UPN and send it. Despite the name, this part only covers Entra ID. The Intune integration follows in Part 2.
+Back in the Entra ID guide, the **Send Entra ID / Intune Setup Request** link opens a pre-filled email to Intel. Fill in the tenant ID, the domains and the UPN and send it. Despite the name, there is no separate Intune setup. The Intune integration is the Entra ID sign-in: once it works, the **Intel vPro Fleet Services** tile in the Intune partner portals takes you straight into Fleet Services with your Entra account.
 
 ![Entra ID setup request](/assets/images/2026/10/intel-vpro-fleet-vproentrareg2.png)
 
@@ -305,7 +305,7 @@ For my lab, I created three security groups in Entra ID:
 | `vPro-RBAC-EndpointOperator-Global` | Endpoint Operator | All endpoint groups |
 | `vPro-RBAC-EndpointOperator-Salem` | Endpoint Operator | Only the endpoint group `Salem` |
 
-The endpoint groups `Default`, `Salem` and `Saulheim` already exist in my tenant. Creating endpoint groups is part of Part 2.
+The endpoint groups `Default`, `Salem` and `Saulheim` already exist in my tenant. Creating endpoint groups is part of [Part 2](/posts/Intel-vPro-Fleet-Services-Part-2-Deploying-the-Agent-with-Intune/#step-1-create-an-endpoint-group-and-download-the-agent).
 
 ### Grant Admin Consent
 
@@ -361,7 +361,7 @@ On the **Endpoint Group Access** tab, select all endpoint groups.
 
 ![Global operator group with access to all endpoint groups](/assets/images/2026/10/intel-vpro-fleet-vprorbacgroupglobal2.png)
 
-The selection is a list of the endpoint groups that exist right now, so check your mappings whenever you add a new endpoint group in Part 2.
+The selection is a list of the endpoint groups that exist right now, so check your mappings whenever you add a new endpoint group in [Part 2](/posts/Intel-vPro-Fleet-Services-Part-2-Deploying-the-Agent-with-Intune/#step-1-create-an-endpoint-group-and-download-the-agent).
 
 `vPro-RBAC-EndpointOperator-Salem` gets the same role,
 
@@ -426,7 +426,7 @@ Do not let the dialog mislead you: it says that existing passphrases remain stor
 
 ### Things to Know Before You Switch
 
-- **Pairing tokens stop working.** Tokens generated with the old mode can no longer register endpoints. You need pairing tokens for the agent deployment in Part 2, so make the decision **before** you build the Intune package, not after you have rolled it out.
+- **Pairing tokens stop working.** Tokens generated with the old mode can no longer register endpoints. You need pairing tokens for the agent deployment in [Part 2](/posts/Intel-vPro-Fleet-Services-Part-2-Deploying-the-Agent-with-Intune/#step-1-create-an-endpoint-group-and-download-the-agent), so make the decision **before** you build the Intune package, not after you have rolled it out.
 - **Re-enabling is possible, but not cheap.** You can only switch back after the cleanup job has finished. The administrator who re-enables it sets a new passphrase for themselves, and every other user is blocked from device operations until an administrator regenerates a passphrase for them. Pairing tokens have to be generated again as well.
 - **Harden the sign-in instead.** Target the **Intel vPro Fleet Services** enterprise application with Conditional Access: phishing-resistant MFA and, ideally, a compliant or privileged access device. Treat `vPro-RBAC-TenantAdmin` like any other privileged role group, with few members and access reviews or PIM for Groups.
 - **Keep local accounts to a minimum.** They bypass Conditional Access, and without the passphrase, their password is the only thing that protects them.
@@ -446,7 +446,7 @@ At this point you have:
 
 If you are in the EU, make sure your data protection officer has signed off on the [hosting and GDPR points](#before-you-start-eu-hosting-and-gdpr) before the agent goes out in Part 2.
 
-What you do not have yet is a single managed device. In Part 2, we find the vPro devices in your fleet with a remediation, package the Fleet Services agent as an Intune app, deploy it to a pilot group and watch the devices show up in the portal.
+What you do not have yet is a single managed device. In [Part 2](/posts/Intel-vPro-Fleet-Services-Part-2-Deploying-the-Agent-with-Intune/), we find the vPro devices in your fleet with a remediation, package the Fleet Services agent as an Intune app, deploy it to a pilot group and watch the devices show up in the portal.
 
 If you are reading this because you just found out that half your fleet has vPro and nobody ever provisioned it: either claim it or disable it. After 2018, those are the only two acceptable states, and with Fleet Services, claiming it is finally the easier option.
 
