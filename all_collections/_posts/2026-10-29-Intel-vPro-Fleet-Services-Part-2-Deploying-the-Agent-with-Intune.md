@@ -16,6 +16,7 @@ image: /assets/images/2026/10/intel-vpro-fleet-part2-header.jpg
 header_title: "Intel vPro Fleet Services Part 2"
 header_cont: "Deploying the agent with Intune"
 ---
+
 In [Part 1](/posts/Intel-vPro-Fleet-Services-Part-1-Onboarding-the-Tenant-and-Connecting-Entra-ID/), we onboarded the Fleet Services tenant, connected Entra ID for sign-in and RBAC, and made a decision about the passphrase. The portal is ready, but it does not know a single device yet. This part changes that. We package the Fleet Services agent with PSAppDeployToolkit, create the Win32 app, find out which devices can actually do vPro, fix broken Management Engine drivers with a second app, and deploy both to a pilot group until the first endpoint shows up in the portal.
 
 Everything I use in this part is on GitHub:
@@ -26,17 +27,20 @@ Everything I use in this part is on GitHub:
 
 ## The Series
 
-| Part | Topic |
-| --- | --- |
-| [Part 1](/posts/Intel-vPro-Fleet-Services-Part-1-Onboarding-the-Tenant-and-Connecting-Entra-ID/) | Onboarding the tenant, passphrase handling, connecting Entra ID SSO and RBAC |
-| **Part 2** (this article) | Identifying vPro devices with a remediation, fixing the MEI driver, and onboarding clients by building and deploying the agent as an Intune app package |
-| Part 3 | Managing endpoints with vPro: power actions, KVM, remote recovery |
+| Part                                                                                             | Topic                                                                                                                                                   |
+| ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Part 1](/posts/Intel-vPro-Fleet-Services-Part-1-Onboarding-the-Tenant-and-Connecting-Entra-ID/) | Onboarding the tenant, passphrase handling, connecting Entra ID SSO and RBAC                                                                            |
+| **Part 2** (this article)                                                                        | Identifying vPro devices with a remediation, fixing the MEI driver, and onboarding clients by building and deploying the agent as an Intune app package |
+| Part 3                                                                                           | Managing endpoints with vPro: power actions, KVM, remote recovery                                                                                       |
 
 ## Table of Contents
 
+- [The Series](#the-series)
+- [Table of Contents](#table-of-contents)
 - [Thanks](#thanks)
 - [Step 1: Create an Endpoint Group and Download the Agent](#step-1-create-an-endpoint-group-and-download-the-agent)
 - [Step 2: Build the Package with PSAppDeployToolkit](#step-2-build-the-package-with-psappdeploytoolkit)
+  - [Log Forwarding](#log-forwarding)
   - [What un-pair Does and What It Does Not](#what-un-pair-does-and-what-it-does-not)
 - [Step 3: Create the Win32 App](#step-3-create-the-win32-app)
   - [Program](#program)
@@ -72,16 +76,16 @@ Go to **Endpoint Groups > New Endpoint Group** and create a group per site, team
 
 ![Endpoint group with agent and pairing token download](/assets/images/2026/10/intel-vpro-fleet-vproendpointgroup.png)
 
-Download the agent installer (1) and the pairing token file (2). In my tenant, the installer was `vProFleetAgent.Installer.msi`, version 1.2.7, and the token is a file named `PairingToken`. Steps 3 and 4 in the portal tell you the rest: both files have to be on the device, side by side, the token keeps its name, and the agent is installed as administrator. The MSI picks up the token from its own directory.
+Download the agent installer (1) and the pairing token file (2). In my tenant, the installer is `vProFleetAgent.Installer.msi`, version 1.3.0, and the token is a file named `PairingToken`. Steps 3 and 4 in the portal tell you the rest: both files have to be on the device, side by side, the token keeps its name, and the agent is installed as administrator. The MSI picks up the token from its own directory.
 
 That has a few consequences:
 
-| What | Why it matters |
-| --- | --- |
-| The token decides the endpoint group | You need **one package per endpoint group**, each with its own token |
-| The token is a secret | Anyone who has it can pair a device with your tenant |
-| Tokens depend on the passphrase mode | Switching the passphrase on or off invalidates them ([Part 1, Step 6](/posts/Intel-vPro-Fleet-Services-Part-1-Onboarding-the-Tenant-and-Connecting-Entra-ID/#step-6-keep-or-disable-the-passphrase)), so the package has to be rebuilt |
-| New endpoint groups are not in your RBAC mappings | Add them to the scoped Endpoint Operator mappings ([Part 1, Step 5](/posts/Intel-vPro-Fleet-Services-Part-1-Onboarding-the-Tenant-and-Connecting-Entra-ID/#step-5-entra-id-role-based-access-control)) before the first device joins |
+| What                                              | Why it matters                                                                                                                                                                                                                         |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| The token decides the endpoint group              | You need **one package per endpoint group**, each with its own token                                                                                                                                                                   |
+| The token is a secret                             | Anyone who has it can pair a device with your tenant                                                                                                                                                                                   |
+| Tokens depend on the passphrase mode              | Switching the passphrase on or off invalidates them ([Part 1, Step 6](/posts/Intel-vPro-Fleet-Services-Part-1-Onboarding-the-Tenant-and-Connecting-Entra-ID/#step-6-keep-or-disable-the-passphrase)), so the package has to be rebuilt |
+| New endpoint groups are not in your RBAC mappings | Add them to the scoped Endpoint Operator mappings ([Part 1, Step 5](/posts/Intel-vPro-Fleet-Services-Part-1-Onboarding-the-Tenant-and-Connecting-Entra-ID/#step-5-entra-id-role-based-access-control)) before the first device joins   |
 
 The other tabs, **802.1x Profiles**, **Unattended Access Profiles** and **Proxy Settings**, are optional. The package below installs the agent with `INSTALLATION_TYPE=STANDARD`, which covers devices without 802.1X and devices with 802.1X and Windows Integrated authentication, without a proxy.
 
@@ -97,14 +101,26 @@ You could deploy the MSI with a plain `msiexec` command line, because Intune ext
 - **Uninstall un-pairs first.** Before the MSI is removed, the script runs `IntelvProFleetServicesAgent.exe un-pair`.
 - **Logs.** You get a PSADT log and an msiexec log in a known place.
 
-| Deployment type | What happens |
-| --- | --- |
-| Install | Checks that `Files\vProFleetAgent.Installer.msi` and `Files\PairingToken` exist and are not empty (else exit `69001`), then installs the MSI with `INSTALLATION_TYPE=STANDARD` |
-| Uninstall | Runs `IntelvProFleetServicesAgent.exe un-pair` (best effort, 5 minute timeout, failures are only logged as warnings), then uninstalls the MSI |
-| Repair | Same file checks as Install, then repairs the MSI |
+| Deployment type | What happens                                                                                                                                                                                         |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Install         | Checks that `Files\vProFleetAgent.Installer.msi` and `Files\PairingToken` exist and are not empty (else exit `69001`), then installs the MSI with `INSTALLATION_TYPE=STANDARD` and `STREAM_LOGS=YES` |
+| Uninstall       | Runs `IntelvProFleetServicesAgent.exe un-pair` (best effort, 5 minute timeout, failures are only logged as warnings), then uninstalls the MSI                                                        |
+| Repair          | Same file checks as Install, then repairs the MSI                                                                                                                                                    |
+
 {: .nowrap-first}
 
-If you need a proxy, add it to `$msiProperties` in the script, for example `'INSTALLATION_TYPE=STANDARD', 'CONFIGURE_PROXY=YES', 'PROXY_URL=http://proxy:8080'`.
+If you need a proxy, add it to `$msiProperties` in the script, for example `'INSTALLATION_TYPE=STANDARD', 'STREAM_LOGS=YES', 'CONFIGURE_PROXY=YES', 'PROXY_URL=http://proxy:8080'`.
+
+### Log Forwarding
+
+Since version 1.3.0, the agent can forward its logs. The option is off by default, so the package turns it on with `STREAM_LOGS=YES`. The MSI then calls the agent with `--stream-logs`, which uploads the logs of that agent run for online access.
+
+- **Only that agent run is uploaded.** The local log files under `INSTALLFOLDER\logs` stay on the device.
+- **The value is case-sensitive.** It has to be exactly `YES`. With `yes`, `1` or `TRUE`, the MSI leaves forwarding off and does not warn you.
+- **It needs agent 1.3.0 or newer.** Devices that still run an older agent need the new package first.
+- **The logs leave the device.** Add this to the list for your data protection officer from [Part 1](/posts/Intel-vPro-Fleet-Services-Part-1-Onboarding-the-Tenant-and-Connecting-Entra-ID/#before-you-start-eu-hosting-and-gdpr).
+
+To turn it off, remove `STREAM_LOGS=YES` from `$msiProperties`.
 
 ### What un-pair Does and What It Does Not
 
@@ -134,15 +150,16 @@ Get-ADTMsiTableProperty -LiteralPath "$pkg\Files\vProFleetAgent.Installer.msi" -
 IntuneWinAppUtil.exe -c $pkg -s Invoke-AppDeployToolkit.exe -o C:\Build\Out
 ```
 
-For version 1.2.7 of the agent, the MSI properties are:
+For version 1.3.0 of the agent, the MSI properties are:
 
-| Property | Value |
-| --- | --- |
-| ProductName | `Intel vPro(R) Fleet Services Agent 1.2.7` (the version is part of the name, so do not detect by name) |
-| ProductCode | `{091A3171-34D0-444F-8826-C72E7CECDDC1}` |
-| UpgradeCode | `{5D76BF8E-50C1-4716-A85A-B2B9CDBD9EEC}` |
-| ALLUSERS | `1` (per-machine) |
-| CLEANAGENTDATA | `TRUE` (agent data is removed on uninstall) |
+| Property       | Value                                                                                                                               |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| ProductName    | `Intel vPro(R) Fleet Services Agent 1.3.0` (the version is part of the name, so do not detect by name)                              |
+| ProductCode    | `{95524B15-30CD-4B95-9B94-C7B6A47085EB}`                                                                                            |
+| UpgradeCode    | `{5D76BF8E-50C1-4716-A85A-B2B9CDBD9EEC}`                                                                                            |
+| ALLUSERS       | `1` (per-machine)                                                                                                                   |
+| CLEANAGENTDATA | `TRUE` (agent data is removed on uninstall)                                                                                         |
+| STREAM_LOGS    | Not set by default. It is listed in `SecureCustomProperties`, so it reaches the elevated install with `/qn`. The package sets `YES` |
 
 Keep `AppVersion` in the script in sync with the MSI version, it is part of the log file name.
 
@@ -160,14 +177,14 @@ Go to **Apps > Windows > Create > Windows app (Win32)** and upload the `.intunew
 
 ![Program settings](/assets/images/2026/10/intel-vpro-fleet-vproapp2.png)
 
-| Setting | Value |
-| --- | --- |
-| Install command | `Invoke-AppDeployToolkit.exe -DeploymentType Install -DeployMode Silent` |
-| Uninstall command | `Invoke-AppDeployToolkit.exe -DeploymentType Uninstall -DeployMode Silent` |
-| Installation time required | 10 minutes |
-| Install behavior | System |
-| Device restart behavior | Determine behavior based on return codes |
-| Return codes | Defaults, optionally `69001` as **Failed** |
+| Setting                    | Value                                                                      |
+| -------------------------- | -------------------------------------------------------------------------- |
+| Install command            | `Invoke-AppDeployToolkit.exe -DeploymentType Install -DeployMode Silent`   |
+| Uninstall command          | `Invoke-AppDeployToolkit.exe -DeploymentType Uninstall -DeployMode Silent` |
+| Installation time required | 10 minutes                                                                 |
+| Install behavior           | System                                                                     |
+| Device restart behavior    | Determine behavior based on return codes                                   |
+| Return codes               | Defaults, optionally `69001` as **Failed**                                 |
 
 Intune treats any return code that is not in the list as a failure, so `69001` works without an entry. Adding it documents the code in the app itself.
 
@@ -177,16 +194,16 @@ The agent should only land on devices that can be provisioned. One way to make s
 
 ![Requirement script](/assets/images/2026/10/intel-vpro-fleet-vproapp3.png)
 
-| Setting | Value |
-| --- | --- |
-| Minimum operating system | Windows 11 23H2 |
-| Requirement type | Script, `Requirement.ps1` |
-| Run script as 32-bit process on 64-bit clients | No |
-| Run this script using the logged on credentials | No |
-| Enforce script signature check | No |
-| Select output data type | String |
-| Operator | Equals |
-| Value | `Supported` (case-sensitive) |
+| Setting                                         | Value                        |
+| ----------------------------------------------- | ---------------------------- |
+| Minimum operating system                        | Windows 11 23H2              |
+| Requirement type                                | Script, `Requirement.ps1`    |
+| Run script as 32-bit process on 64-bit clients  | No                           |
+| Run this script using the logged on credentials | No                           |
+| Enforce script signature check                  | No                           |
+| Select output data type                         | String                       |
+| Operator                                        | Equals                       |
+| Value                                           | `Supported` (case-sensitive) |
 
 The script writes exactly one line, `Supported` or `NotSupported`, and always exits with `0`. Every other device shows up as **Not applicable** instead of failed. The reason for a `NotSupported` would break the string comparison, so it goes to a log instead: `C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\vProFleetAgent-Requirement.log`. That folder is part of **Collect diagnostics**, and the log is capped at 1 MB because requirement scripts run on every evaluation.
 
@@ -212,19 +229,20 @@ The app is ready, but before you assign it, you want a list. Which devices have 
 
 I use a detect-only remediation for this. The script reads the Intel `$AMT` structure from SMBIOS, which contains the actual ME firmware SKU. That is the only reliable way to tell a vPro platform from a consumer platform that also has Management Engine hardware in Device Manager. Only when SMBIOS cannot be read does it fall back to the CPU brand string and the AMT WMI provider.
 
-| ME SKU in SMBIOS | vPro capable |
-| --- | --- |
-| Full AMT Manageability | Yes, vPro Enterprise |
-| Standard Manageability on ME 16 or newer | Yes, vPro Essentials |
-| Standard Manageability below ME 16, Small Business Advantage, Consumer | No |
+| ME SKU in SMBIOS                                                       | vPro capable         |
+| ---------------------------------------------------------------------- | -------------------- |
+| Full AMT Manageability                                                 | Yes, vPro Enterprise |
+| Standard Manageability on ME 16 or newer                               | Yes, vPro Essentials |
+| Standard Manageability below ME 16, Small Business Advantage, Consumer | No                   |
 
 After the hardware, the script checks the software side. It looks for the Management Engine in Device Manager by name and by hardware ID, an Intel PCI device with class code `07 80`. Without a driver, Windows names it `PCI Simple Communications Controller`, and a name match alone would report a device with a missing driver as a device without a Management Engine. Then the script checks the Intel MEI driver, the Intel Local Manageability Service (LMS), the AMT WMI provider and the AMT provisioning state. The provisioning state comes from the firmware itself, through `GetProvisioningState()` of the `OOB_Service` class in the AMT WMI provider. That makes it correct no matter which tool provisioned the device: Fleet Services, Intel EMA, Intel SCS or a manual setup in MEBX. The registry keys under `HKLM:\SOFTWARE\Intel` are only a fallback, because Intel SCS is the only tool that writes them. The result is one of three statuses:
 
-| Status | Exit code | Intune shows | Meaning |
-| --- | --- | --- | --- |
-| `FullyReady` | 0 | Without issues | vPro hardware, working MEI driver, LMS running, AMT WMI available, AMT provisioned |
-| `SoftwareActionNeeded` | 1 | With issues | The hardware supports vPro, but the driver, LMS, WMI provider or provisioning is missing |
-| `HardwareNotCapable` | 1 | With issues | No vPro SKU, no ME hardware or not an Intel CPU |
+| Status                 | Exit code | Intune shows   | Meaning                                                                                  |
+| ---------------------- | --------- | -------------- | ---------------------------------------------------------------------------------------- |
+| `FullyReady`           | 0         | Without issues | vPro hardware, working MEI driver, LMS running, AMT WMI available, AMT provisioned       |
+| `SoftwareActionNeeded` | 1         | With issues    | The hardware supports vPro, but the driver, LMS, WMI provider or provisioning is missing |
+| `HardwareNotCapable`   | 1         | With issues    | No vPro SKU, no ME hardware or not an Intel CPU                                          |
+
 {: .nowrap-first}
 
 > **`GetProvisioningState()` only works as a static call.** The Intel ME WMI provider lists the methods of `OOB_Service`, but calling them on an instance fails with `Provider failure (0x80041004)`. Only `Invoke-CimMethod -ClassName OOB_Service -MethodName GetProvisioningState` returns the state. Keep that in mind if you adapt the script.
@@ -263,18 +281,19 @@ The devices with `MEI driver is not functional` have vPro hardware, but the agen
 
 The package installs these components of the download with `pnputil`, using the DCH INF files. DAL is left out.
 
-| Folder | Component | Why |
-| --- | --- | --- |
-| `Files\MEI` | Intel Management Engine Interface (MEI) driver | The agent and everything else talk to the ME through it |
-| `Files\LMS` | Intel Local Manageability Service (LMS) | Local AMT access |
-| `Files\WMIProvider` | Intel ME WMI provider (`root\Intel_ME`) | The remediation from Step 4 needs it for `FullyReady` and to read the AMT provisioning state |
+| Folder                                 | Component                                              | Why                                                                                                               |
+| -------------------------------------- | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| `Files\MEI`                            | Intel Management Engine Interface (MEI) driver         | The agent and everything else talk to the ME through it                                                           |
+| `Files\LMS`                            | Intel Local Manageability Service (LMS)                | Local AMT access                                                                                                  |
+| `Files\WMIProvider`                    | Intel ME WMI provider (`root\Intel_ME`)                | The remediation from Step 4 needs it for `FullyReady` and to read the AMT provisioning state                      |
 | `Files\SOL`, `Files\SOL_LMS_Extension` | Intel AMT Serial Over LAN driver and its LMS extension | Driver for the AMT serial port on vPro devices, otherwise an unknown "PCI Serial Port" shows up in Device Manager |
 
-| Deployment type | What happens |
-| --- | --- |
-| Install | Checks that each driver folder contains INF files (else exit `69001`) and that the `DriverVer` of the MEI INF matches `AppVersion` (else exit `69002`). Then runs `pnputil /add-driver <inf> /install` for every INF, folder by folder in the order of the table above. INFs below legacy OS folders such as `MEI\win8` are skipped |
-| Uninstall | Finds the driver store packages that came from the package INFs and removes them with `pnputil /delete-driver /uninstall`, in reverse order. The devices fall back to the next best driver in the store |
-| Repair | Same as Install |
+| Deployment type | What happens                                                                                                                                                                                                                                                                                                                        |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Install         | Checks that each driver folder contains INF files (else exit `69001`) and that the `DriverVer` of the MEI INF matches `AppVersion` (else exit `69002`). Then runs `pnputil /add-driver <inf> /install` for every INF, folder by folder in the order of the table above. INFs below legacy OS folders such as `MEI\win8` are skipped |
+| Uninstall       | Finds the driver store packages that came from the package INFs and removes them with `pnputil /delete-driver /uninstall`, in reverse order. The devices fall back to the next best driver in the store                                                                                                                             |
+| Repair          | Same as Install                                                                                                                                                                                                                                                                                                                     |
+
 {: .nowrap-first}
 
 The script calls `pnputil` once per INF instead of using `/subdirs`. Intel ships legacy drivers for Windows 7 and 8 next to the Windows 10/11 ones, and those must not end up in the driver store.
@@ -317,14 +336,14 @@ The program settings are the same as for the agent, plus `69002` as a second fai
 
 ![Program settings of the driver app](/assets/images/2026/10/intel-vpro-fleet-vprodriverapp2.png)
 
-| Setting | Value |
-| --- | --- |
-| Install command | `Invoke-AppDeployToolkit.exe -DeploymentType Install -DeployMode Silent` |
-| Uninstall command | `Invoke-AppDeployToolkit.exe -DeploymentType Uninstall -DeployMode Silent` |
-| Installation time required | 10 minutes |
-| Install behavior | System |
-| Device restart behavior | Determine behavior based on return codes |
-| Return codes | Defaults, plus `69001` and `69002` as **Failed** |
+| Setting                    | Value                                                                      |
+| -------------------------- | -------------------------------------------------------------------------- |
+| Install command            | `Invoke-AppDeployToolkit.exe -DeploymentType Install -DeployMode Silent`   |
+| Uninstall command          | `Invoke-AppDeployToolkit.exe -DeploymentType Uninstall -DeployMode Silent` |
+| Installation time required | 10 minutes                                                                 |
+| Install behavior           | System                                                                     |
+| Device restart behavior    | Determine behavior based on return codes                                   |
+| Return codes               | Defaults, plus `69001` and `69002` as **Failed**                           |
 
 On the **Requirements** tab, set the minimum operating system to Windows 11 24H2. The **requirement script** makes the app applicable to every device with an Intel Management Engine, in any driver state. It uses the same device match as the remediation, so a device without any driver is found as well. It has the same settings as the agent's requirement: String, Equals, `Supported`. It logs the devices it found to `C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\IntelMEDriver-Requirement.log`.
 
@@ -354,7 +373,7 @@ After the install, the device registers with the endpoint group from its token. 
 
 ![The first endpoint in Fleet Services](/assets/images/2026/10/intel-vpro-fleet-vproendpoint.png)
 
-Note the text under **Endpoints**: *These endpoints have Intel vPro configured and can be managed independent of the operating system.* The device is not only paired, AMT is provisioned and the device is claimed by your tenant. That is the state from [Part 1](/posts/Intel-vPro-Fleet-Services-Part-1-Onboarding-the-Tenant-and-Connecting-Entra-ID/#unprovisioned-is-not-the-same-as-off) that nobody had for years.
+Note the text under **Endpoints**: _These endpoints have Intel vPro configured and can be managed independent of the operating system._ The device is not only paired, AMT is provisioned and the device is claimed by your tenant. That is the state from [Part 1](/posts/Intel-vPro-Fleet-Services-Part-1-Onboarding-the-Tenant-and-Connecting-Entra-ID/#unprovisioned-is-not-the-same-as-off) that nobody had for years.
 
 Intune sees it as well. On the next run of the remediation from Step 4, the firmware reports `Post-Provisioning`, and the device flips from `SoftwareActionNeeded` to `FullyReady`, and from **With issues** to **Without issues**. That is your check from the Intune side, and it scales better than clicking through endpoint groups in the portal.
 
@@ -362,16 +381,17 @@ Intune sees it as well. On the next run of the remediation from Step 4, the firm
 
 If a device does not show up, these are the places to look:
 
-| What | Where |
-| --- | --- |
-| Agent install log | `C:\Windows\Logs\Software\Intel_vProFleetServicesAgent_1.2.7_EN_01_PSAppDeployToolkit_Install.log` |
-| msiexec log | Next to the agent install log |
-| Driver install log | `C:\Windows\Logs\Software\Intel_ManagementEngineDriver_2603.9.4.0_EN_01_PSAppDeployToolkit_Install.log`, including the `pnputil` output |
-| Requirement results | `vProFleetAgent-Requirement.log` and `IntelMEDriver-Requirement.log` in `C:\ProgramData\Microsoft\IntuneManagementExtension\Logs` |
-| Intune app processing | `AppWorkload.log` in the same Intune Management Extension log folder |
-| Pairing state on the device | `IntelvProFleetServicesAgent.exe endpoint-info` in the agent's install folder |
-| Exit code `69001` | Agent package built without the MSI or the token, or driver package built without INF files |
-| Exit code `69002` | Driver package: `AppVersion` does not match the MEI driver version |
+| What                                        | Where                                                                                                                                                                   |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Agent install log                           | `C:\Windows\Logs\Software\Intel_vProFleetServicesAgent_1.3.0_EN_01_PSAppDeployToolkit_Install.log`                                                                      |
+| Agent logs                                  | The logs of the agent run are forwarded for online access ([Log Forwarding](#log-forwarding)). The local log files are under `INSTALLFOLDER\logs`                       |
+| msiexec log                                 | Next to the agent install log                                                                                                                                           |
+| Driver install log                          | `C:\Windows\Logs\Software\Intel_ManagementEngineDriver_2603.9.4.0_EN_01_PSAppDeployToolkit_Install.log`, including the `pnputil` output                                 |
+| Requirement results                         | `vProFleetAgent-Requirement.log` and `IntelMEDriver-Requirement.log` in `C:\ProgramData\Microsoft\IntuneManagementExtension\Logs`                                       |
+| Intune app processing                       | `AppWorkload.log` in the same Intune Management Extension log folder                                                                                                    |
+| Pairing state on the device                 | `IntelvProFleetServicesAgent.exe endpoint-info` in the agent's install folder                                                                                           |
+| Exit code `69001`                           | Agent package built without the MSI or the token, or driver package built without INF files                                                                             |
+| Exit code `69002`                           | Driver package: `AppVersion` does not match the MEI driver version                                                                                                      |
 | LMS or WMI missing after the driver install | LMS and the `Intel_ME` WMI namespace only appear once the MEI driver is active, sometimes only after a reboot. The driver install log has a warning if they are missing |
 
 ---
@@ -402,4 +422,4 @@ What we have not done yet is use any of it. In Part 3, we open the endpoint, loo
 
 ---
 
-*Intel, the Intel logo, Intel vPro and Intel Active Management Technology are trademarks of Intel Corporation or its subsidiaries. Other names and brands may be claimed as the property of others.*
+_Intel, the Intel logo, Intel vPro and Intel Active Management Technology are trademarks of Intel Corporation or its subsidiaries. Other names and brands may be claimed as the property of others._
