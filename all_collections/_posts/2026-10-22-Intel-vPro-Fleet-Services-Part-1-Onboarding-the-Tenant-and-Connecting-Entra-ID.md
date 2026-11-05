@@ -80,7 +80,7 @@ You find it under **Devices > Partner portals > Intel vPro Fleet Services** in t
 | --- | --- |
 | **Part 1** (this article) | Onboarding the tenant, passphrase handling, connecting Entra ID SSO and RBAC |
 | [Part 2](/posts/Intel-vPro-Fleet-Services-Part-2-Deploying-the-Agent-with-Intune/) | Identifying vPro devices with a remediation, fixing the MEI driver, and onboarding clients by building and deploying the agent as an Intune app package |
-| Part 3 | Managing endpoints with vPro: power actions, KVM, remote recovery |
+| [Part 3](/posts/Intel-vPro-Fleet-Services-Part-3-Managing-Endpoints-with-Power-Actions-KVM-and-Remote-Recovery/) | Managing endpoints with vPro: power actions, KVM, remote recovery |
 
 ---
 
@@ -289,7 +289,7 @@ Fleet Services has two roles, and both can be used in group mappings. Intel docu
 | `endpoint.power_actions` | Run power actions | ✓ | ✓ |
 | `endpoint.kvm` | Start KVM remote control sessions | ✓ | ✓ |
 
-> **Endpoint Operator is not a read-only helpdesk role.** Besides power actions and KVM, it includes `endpoint.write` and `endpoint.delete`, so an operator can also move endpoints between endpoint groups and stop managing them. There is no narrower role today, which makes the endpoint group scope of each mapping your most important control. Which power actions need the user's consent on the device is covered in Part 3.
+> **Endpoint Operator is not a read-only helpdesk role.** Besides power actions and KVM, it includes `endpoint.write` and `endpoint.delete`, so an operator can also move endpoints between endpoint groups and stop managing them. There is no narrower role today, which makes the endpoint group scope of each mapping your most important control. Which power actions need the user's consent on the device is covered in [Part 3](/posts/Intel-vPro-Fleet-Services-Part-3-Managing-Endpoints-with-Power-Actions-KVM-and-Remote-Recovery/#step-3-ask-the-user-for-consent).
 
 Each group mapping gets one of these roles and, for Endpoint Operators, the endpoint groups it applies to.
 

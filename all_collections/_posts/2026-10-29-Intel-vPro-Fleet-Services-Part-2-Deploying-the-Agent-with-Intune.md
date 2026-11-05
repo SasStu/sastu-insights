@@ -31,7 +31,7 @@ Everything I use in this part is on GitHub:
 | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [Part 1](/posts/Intel-vPro-Fleet-Services-Part-1-Onboarding-the-Tenant-and-Connecting-Entra-ID/) | Onboarding the tenant, passphrase handling, connecting Entra ID SSO and RBAC                                                                            |
 | **Part 2** (this article)                                                                        | Identifying vPro devices with a remediation, fixing the MEI driver, and onboarding clients by building and deploying the agent as an Intune app package |
-| Part 3                                                                                           | Managing endpoints with vPro: power actions, KVM, remote recovery                                                                                       |
+| [Part 3](/posts/Intel-vPro-Fleet-Services-Part-3-Managing-Endpoints-with-Power-Actions-KVM-and-Remote-Recovery/) | Managing endpoints with vPro: power actions, KVM, remote recovery                                                                                       |
 
 ## Table of Contents
 
@@ -89,7 +89,7 @@ That has a few consequences:
 
 The other tabs, **802.1x Profiles**, **Unattended Access Profiles** and **Proxy Settings**, are optional. The package below installs the agent with `INSTALLATION_TYPE=STANDARD`, which covers devices without 802.1X and devices with 802.1X and Windows Integrated authentication, without a proxy.
 
-**Unattended Access** decides whether someone has to sit in front of the device. Without it, AMT runs in Client Control Mode: before a KVM session starts, the user has to read a consent code from the screen to the admin. That is fine for a supported user, but useless for a device in an empty office or one that hangs before Windows starts. Unattended access needs Admin Control Mode, and Admin Control Mode needs a provisioning certificate. It has to come from a CA whose root is built into the AMT firmware, and it has to be issued for the DNS suffix of your devices. I do not have such a certificate in my lab yet. Once I do, I may cover unattended access in a follow-up. Until then, this series works with user consent, and Part 3 shows what that looks like for the user.
+**Unattended Access** decides whether someone has to sit in front of the device. Without it, AMT runs in Client Control Mode: before a KVM session starts, the user has to read a consent code from the screen to the admin. That is fine for a supported user, but useless for a device in an empty office or one that hangs before Windows starts. Unattended access needs Admin Control Mode, and Admin Control Mode needs a provisioning certificate. It has to come from a CA whose root is built into the AMT firmware, and it has to be issued for the DNS suffix of your devices. I do not have such a certificate in my lab yet. Once I do, I may cover unattended access in a follow-up. Until then, this series works with user consent, and [Part 3](/posts/Intel-vPro-Fleet-Services-Part-3-Managing-Endpoints-with-Power-Actions-KVM-and-Remote-Recovery/#step-3-ask-the-user-for-consent) shows what that looks like for the user.
 
 ---
 
@@ -418,7 +418,7 @@ At this point you have:
 - A Win32 app that only lands on devices that can be provisioned
 - The first endpoints in Fleet Services, provisioned and claimed by your tenant
 
-What we have not done yet is use any of it. In Part 3, we open the endpoint, look at power actions and KVM, and see what the user on the other side of the screen gets to say about it.
+What we have not done yet is use any of it. In [Part 3](/posts/Intel-vPro-Fleet-Services-Part-3-Managing-Endpoints-with-Power-Actions-KVM-and-Remote-Recovery/), we open the endpoint, look at power actions and KVM, and see what the user on the other side of the screen gets to say about it.
 
 ---
 
