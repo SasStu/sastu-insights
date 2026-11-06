@@ -40,6 +40,7 @@ Everything here runs in Client Control Mode. As explained in [Part 2](/posts/Int
   - [RLE 8 or RLE 16](#rle-8-or-rle-16)
   - [Send Keys](#send-keys)
 - [Step 5: Remote Recovery with BIOS and PXE](#step-5-remote-recovery-with-bios-and-pxe)
+  - [Enter a BitLocker Recovery Key](#enter-a-bitlocker-recovery-key)
 - [Step 6: Check the Audit Trail](#step-6-check-the-audit-trail)
   - [Endpoint Logs](#endpoint-logs)
 - [Step 7: Stop Managing an Endpoint](#step-7-stop-managing-an-endpoint)
@@ -235,6 +236,12 @@ The other recovery path is Reset to PXE or Power on to PXE. Combined with a netw
 Power up to BIOS settings and Power on to PXE did not work in my test. You have to enter the code before the boot command is sent, and a device that is off cannot display the code. The workaround is to turn the device on first and then use Reset to BIOS settings or Reset to PXE. That also matches the [AMT power states reference](https://device-management-toolkit.github.io/docs/2.39/Reference/powerstates/): on a device that is already on, Power up to BIOS settings has no effect, and Reset to BIOS settings is the better choice. It does not need a running OS for this. As long as the device is on and the user can see the code, KVM is possible as well.
 
 Be honest with yourself about the limit here. With user consent, recovery needs a person in front of the device who can read a code. For a user with a broken laptop on the phone, that works well. For a device in an empty office, it does not, and that is the case for Admin Control Mode from [Part 2](/posts/Intel-vPro-Fleet-Services-Part-2-Deploying-the-Agent-with-Intune/#step-1-create-an-endpoint-group-and-download-the-agent).
+
+### Enter a BitLocker Recovery Key
+
+KVM also reaches the BitLocker recovery screen, where Windows has not started yet and your regular remote support tool cannot help. I tested this on my pilot device: copy the 48-digit recovery key, select the Paste button in the toolbar, and the key lands in the field on the device. Nobody has to read the key out over the phone or type it in by hand.
+
+![BitLocker recovery screen in a KVM session with the recovery key pasted into the key field with the Paste button](/assets/images/2026/11/intel-vpro-fleet-kvm-bitlocker-recovery.png)
 
 ---
 
