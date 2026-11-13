@@ -191,6 +191,14 @@ main {
   overflow-wrap: normal;
   word-break: normal;
 }
+/* the generic .content table code rule above sets white-space on the code
+   element itself, so the cell-level nowrap never reached inline code in the
+   first column - paths and file names still wrapped. Pin it on the code too. */
+.content table.nowrap-first td:first-child code,
+.content table.nowrap-first th:first-child code {
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
 .content img {
   max-width: 100%;
   margin: 1rem 0;

@@ -106,7 +106,6 @@ You could deploy the MSI with a plain `msiexec` command line, because Intune ext
 | Install         | Checks that `Files\vProFleetAgent.Installer.msi` and `Files\PairingToken` exist and are not empty (else exit `69001`), then installs the MSI with `INSTALLATION_TYPE=STANDARD` and `STREAM_LOGS=YES` |
 | Uninstall       | Runs `IntelvProFleetServicesAgent.exe un-pair` (best effort, 5 minute timeout, failures are only logged as warnings), then uninstalls the MSI                                                        |
 | Repair          | Same file checks as Install, then repairs the MSI                                                                                                                                                    |
-
 {: .nowrap-first}
 
 If you need a proxy, add it to `$msiProperties` in the script, for example `'INSTALLATION_TYPE=STANDARD', 'STREAM_LOGS=YES', 'CONFIGURE_PROXY=YES', 'PROXY_URL=http://proxy:8080'`.
@@ -242,7 +241,6 @@ After the hardware, the script checks the software side. It looks for the Manage
 | `FullyReady`           | 0         | Without issues | vPro hardware, working MEI driver, LMS running, AMT WMI available, AMT provisioned       |
 | `SoftwareActionNeeded` | 1         | With issues    | The hardware supports vPro, but the driver, LMS, WMI provider or provisioning is missing |
 | `HardwareNotCapable`   | 1         | With issues    | No vPro SKU, no ME hardware or not an Intel CPU                                          |
-
 {: .nowrap-first}
 
 > **`GetProvisioningState()` only works as a static call.** The Intel ME WMI provider lists the methods of `OOB_Service`, but calling them on an instance fails with `Provider failure (0x80041004)`. Only `Invoke-CimMethod -ClassName OOB_Service -MethodName GetProvisioningState` returns the state. Keep that in mind if you adapt the script.
@@ -293,7 +291,6 @@ The package installs these components of the download with `pnputil`, using the 
 | Install         | Checks that each driver folder contains INF files (else exit `69001`) and that the `DriverVer` of the MEI INF matches `AppVersion` (else exit `69002`). Then runs `pnputil /add-driver <inf> /install` for every INF, folder by folder in the order of the table above. INFs below legacy OS folders such as `MEI\win8` are skipped |
 | Uninstall       | Finds the driver store packages that came from the package INFs and removes them with `pnputil /delete-driver /uninstall`, in reverse order. The devices fall back to the next best driver in the store                                                                                                                             |
 | Repair          | Same as Install                                                                                                                                                                                                                                                                                                                     |
-
 {: .nowrap-first}
 
 The script calls `pnputil` once per INF instead of using `/subdirs`. Intel ships legacy drivers for Windows 7 and 8 next to the Windows 10/11 ones, and those must not end up in the driver store.
